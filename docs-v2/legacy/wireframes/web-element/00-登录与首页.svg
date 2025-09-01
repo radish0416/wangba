@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .panel{fill:#ffffff;stroke:#cbd5e1}
+      .title{font:700 18px Arial;fill:#0f172a}
+      .text{font:14px Arial;fill:#0f172a}
+      .btn{fill:#409EFF;stroke:#2563eb}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1400" height="900" fill="#f6f8fa"/>
+  <rect x="460" y="200" width="480" height="380" class="panel" rx="8"/>
+  <text x="520" y="250" class="title">后台登录 (Element-UI风格)</text>
+  <text x="520" y="300" class="text">用户名</text>
+  <rect x="520" y="310" width="360" height="40" class="panel"/>
+  <text x="520" y="370" class="text">密码</text>
+  <rect x="520" y="380" width="360" height="40" class="panel"/>
+  <rect x="520" y="440" width="160" height="44" class="btn" rx="6"/>
+  <text x="565" y="468" fill="#fff" font-family="Arial" font-size="16">登录</text>
+
+  <rect x="80" y="40" width="1240" height="120" class="panel"/>
+  <text x="100" y="90" class="title">登录后首页看板(占位)</text>
+  <text x="100" y="120" class="text">营收、上座率、实时订单</text>
+</svg>

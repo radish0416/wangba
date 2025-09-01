@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <defs>
+    <style>
+      .phone{fill:#ffffff;stroke:#e5e7eb}
+      .title{font:700 28px Arial;fill:#0f172a}
+      .text{font:20px Arial;fill:#0f172a}
+      .bar{fill:#111827}
+      .chip{fill:#e5e7eb;stroke:#cbd5e1}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1080" height="1920" fill="#f3f4f6"/>
+  <rect x="40" y="40" width="1000" height="1840" class="phone" rx="40"/>
+  <rect x="80" y="100" width="920" height="120" class="bar" rx="12"/>
+  <text x="120" y="175" fill="#fff" font-family="Arial" font-size="36">网吧 · 首页</text>
+  <text x="120" y="260" class="title">3D俯视布局</text>
+  <rect x="120" y="300" width="880" height="600" class="phone"/>
+  <text x="160" y="360" class="text">three.js 3D 场景占位</text>
+  <rect x="120" y="940" width="880" height="120" class="chip" rx="12"/>
+  <text x="150" y="1015" class="text">区域筛选 · 热门区域 · 搜索机位</text>
+  <rect x="120" y="1100" width="880" height="520" class="phone"/>
+  <text x="150" y="1160" class="text">可滚动座位列表(状态颜色)</text>
+</svg>

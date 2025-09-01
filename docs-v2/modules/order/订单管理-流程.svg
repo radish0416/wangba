@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs><style>.b{fill:#fff;stroke:#111}.t{font:14px Arial;fill:#111}.a{stroke:#111;marker-end:url(#m);stroke-width:2}</style>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z"/></marker>
+  </defs>
+  <rect x="40" y="40" width="260" height="80" class="b"/><text x="60" y="90" class="t">小程序选座→创建订单</text>
+  <rect x="340" y="40" width="260" height="80" class="b"/><text x="360" y="90" class="t">锁定机位/计费计算</text>
+  <rect x="640" y="40" width="260" height="80" class="b"/><text x="660" y="90" class="t">支付预下单/回调</text>
+  <rect x="940" y="40" width="220" height="80" class="b"/><text x="960" y="90" class="t">开始计时/使用中</text>
+  <rect x="640" y="180" width="260" height="80" class="b"/><text x="660" y="230" class="t">续费/加购</text>
+  <rect x="340" y="320" width="260" height="80" class="b"/><text x="360" y="370" class="t">结算/退款</text>
+  <line x1="300" y1="80" x2="340" y2="80" class="a"/><line x1="600" y1="80" x2="640" y2="80" class="a"/>
+  <line x1="900" y1="80" x2="940" y2="80" class="a"/>
+  <line x1="770" y1="120" x2="770" y2="180" class="a"/>
+  <line x1="770" y1="260" x2="600" y2="320" class="a"/>
+</svg>

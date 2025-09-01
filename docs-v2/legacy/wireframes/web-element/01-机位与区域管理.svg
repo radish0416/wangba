@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <style>
+      .panel{fill:#fff;stroke:#cbd5e1}
+      .title{font:700 18px Arial;fill:#0f172a}
+      .text{font:14px Arial;fill:#0f172a}
+      .tag{fill:#e5e7eb;stroke:#cbd5e1}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1600" height="1000" fill="#f6f8fa"/>
+  <rect x="40" y="40" width="1520" height="120" class="panel"/>
+  <text x="60" y="85" class="title">区域列表 + 筛选</text>
+  <rect x="40" y="180" width="480" height="760" class="panel"/>
+  <text x="60" y="220" class="text">区域树</text>
+  <rect x="560" y="180" width="1000" height="760" class="panel"/>
+  <text x="580" y="220" class="title">机位网格</text>
+  <text x="580" y="255" class="text">状态颜色: 空闲/占用/维护/锁定</text>
+  <rect x="580" y="280" width="960" height="620" class="panel"/>
+</svg>

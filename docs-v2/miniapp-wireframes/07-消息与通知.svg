@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <defs><style>.p{fill:#fff;stroke:#e5e7eb}.t{font:24px Arial;fill:#0f172a}.h{font:700 28px Arial;fill:#0f172a}</style></defs>
+  <rect x="0" y="0" width="1080" height="1920" fill="#f3f4f6"/>
+  <rect x="40" y="40" width="1000" height="1840" class="p" rx="40"/>
+  <text x="120" y="140" class="h">消息与通知</text>
+  <rect x="120" y="200" width="880" height="1560" class="p"/>
+  <text x="150" y="260" class="t">订单提醒/到期续费/活动推送</text>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <defs>
+    <style>
+      .phone{fill:#ffffff;stroke:#e5e7eb}
+      .title{font:700 28px Arial;fill:#0f172a}
+      .text{font:20px Arial;fill:#0f172a}
+      .btn{fill:#22c55e}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1080" height="1920" fill="#f3f4f6"/>
+  <rect x="40" y="40" width="1000" height="1840" class="phone" rx="40"/>
+  <text x="120" y="140" class="title">选座与下单</text>
+  <rect x="120" y="180" width="880" height="520" class="phone"/>
+  <text x="150" y="240" class="text">点选机位 → 高亮</text>
+  <rect x="120" y="740" width="880" height="420" class="phone"/>
+  <text x="150" y="800" class="text">订单预览: 机位/时段/优惠</text>
+  <rect x="120" y="1220" width="400" height="100" class="btn" rx="12"/>
+  <text x="160" y="1285" fill="#fff" font-family="Arial" font-size="28">立即下单</text>
+  <rect x="600" y="1220" width="400" height="100" fill="#3b82f6" rx="12"/>
+  <text x="640" y="1285" fill="#fff" font-family="Arial" font-size="28">加入购物车</text>
+</svg>

@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=Root@123456
+      - MYSQL_DATABASE=cybercafe
+      - TZ=Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    command: ["--default-authentication-plugin=mysql_native_password","--character-set-server=utf8mb4","--collation-server=utf8mb4_0900_ai_ci"]
+
+  redis:
+    image: redis:7.2
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2024-07-26T20-20-16Z
+    restart: unless-stopped
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data/minio:/data
+
+  server:
+    image: openjdk:21-jdk
+    container_name: cybercafe-server
+    working_dir: /app
+    volumes:
+      - ./server/app.jar:/app/app.jar
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - TZ=Asia/Shanghai
+    command: ["java","-jar","/app/app.jar"]
+    depends_on:
+      - mysql
+      - redis
+      - minio
+    ports:
+      - "8080:8080"
+
+volumes:
+  data:
+    driver: local

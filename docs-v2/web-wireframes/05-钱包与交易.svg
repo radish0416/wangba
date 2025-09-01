@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs><style>.p{fill:#fff;stroke:#cbd5e1}.t{font:16px Arial;fill:#0f172a}.h{font:700 20px Arial;fill:#0f172a}</style></defs>
+  <rect x="0" y="0" width="1600" height="1000" fill="#f6f8fa"/>
+  <rect x="40" y="40" width="1520" height="120" class="p"/>
+  <text x="60" y="90" class="h">钱包与交易</text>
+  <rect x="40" y="180" width="1520" height="780" class="p"/>
+  <text x="60" y="220" class="t">交易列表（分页/导出）</text>
+</svg>
