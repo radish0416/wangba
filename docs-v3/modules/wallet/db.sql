@@ -1,25 +1,41 @@
--- 钱包模块（v3 重设计）
+-- 钱包模块（小驼峰+审计与扩展）
 
 CREATE TABLE `wallet_account` (
-  `user_id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `balance` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  `frozen` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`,`store_id`)
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `balance` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '可用余额',
+  `frozen` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '冻结金额',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
+  PRIMARY KEY (`userId`,`storeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钱包账户';
 
 CREATE TABLE `wallet_ledger` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `type` TINYINT NOT NULL COMMENT '1充值 2消费 3退款 4提现 5冻结 6解冻',
-  `amount` DECIMAL(12,2) NOT NULL,
-  `balance_after` DECIMAL(12,2) NOT NULL,
-  `biz_id` VARCHAR(64) NOT NULL DEFAULT '',
-  `remark` VARCHAR(255) NOT NULL DEFAULT '',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `type` TINYINT NOT NULL COMMENT '类型 1充值 2消费 3退款 4提现 5冻结 6解冻',
+  `amount` DECIMAL(12,2) NOT NULL COMMENT '变动金额',
+  `balanceAfter` DECIMAL(12,2) NOT NULL COMMENT '变动后余额',
+  `bizId` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '业务单号',
+  `remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user_time` (`user_id`,`create_time`),
-  KEY `idx_store_type` (`store_id`,`type`)
+  KEY `idx_user_time` (`userId`,`createTime`),
+  KEY `idx_store_type` (`storeId`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钱包流水';

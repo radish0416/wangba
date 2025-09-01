@@ -1,23 +1,41 @@
--- 楼层与区域（v3 重设计）
+-- 楼层与区域（小驼峰+审计与扩展）
 
 CREATE TABLE `floor` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `name` VARCHAR(64) NOT NULL,
-  `sort` INT NOT NULL DEFAULT 0,
-  `status` TINYINT NOT NULL DEFAULT 1,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '楼层名称',
+  `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='楼层';
 
 CREATE TABLE `area` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `floor_id` BIGINT NOT NULL,
-  `name` VARCHAR(64) NOT NULL,
-  `sort` INT NOT NULL DEFAULT 0,
-  `status` TINYINT NOT NULL DEFAULT 1,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `floorId` BIGINT NOT NULL COMMENT '楼层ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '区域名称',
+  `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_floor` (`floor_id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_floor` (`floorId`),
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='区域';

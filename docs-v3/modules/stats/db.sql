@@ -1,9 +1,18 @@
--- 数据统计（v3 重设计）
+-- 数据统计（小驼峰+审计与扩展）
 
 CREATE TABLE `stats_daily_revenue` (
-  `biz_date` DATE NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `revenue_total` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  `orders` INT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`biz_date`,`store_id`)
+  `bizDate` DATE NOT NULL COMMENT '业务日期',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `revenueTotal` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '营收合计',
+  `orders` INT NOT NULL DEFAULT 0 COMMENT '订单数',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
+  PRIMARY KEY (`bizDate`,`storeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='每日营收汇总';

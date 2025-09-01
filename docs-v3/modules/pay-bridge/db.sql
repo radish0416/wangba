@@ -1,25 +1,41 @@
--- 支付桥接（v3 重设计）
+-- 支付桥接（小驼峰+审计与扩展）
 
 CREATE TABLE `pay_transaction` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `order_id` BIGINT NOT NULL,
-  `channel` TINYINT NOT NULL COMMENT '1微信 2支付宝 3钱包',
-  `trade_no` VARCHAR(64) NOT NULL,
-  `status` TINYINT NOT NULL COMMENT '0创建 1成功 2关闭 3退款',
-  `amount` DECIMAL(12,2) NOT NULL,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `orderId` BIGINT NOT NULL COMMENT '订单ID',
+  `channel` TINYINT NOT NULL COMMENT '支付渠道 1微信 2支付宝 3钱包',
+  `tradeNo` VARCHAR(64) NOT NULL COMMENT '第三方交易号',
+  `status` TINYINT NOT NULL COMMENT '状态 0创建 1成功 2关闭 3退款',
+  `amount` DECIMAL(12,2) NOT NULL COMMENT '金额',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_trade_no` (`trade_no`),
-  KEY `idx_order` (`order_id`)
+  UNIQUE KEY `uk_trade_no` (`tradeNo`),
+  KEY `idx_order` (`orderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付交易';
 
 CREATE TABLE `pay_notify_log` (
-  `id` BIGINT NOT NULL,
-  `transaction_id` BIGINT NOT NULL,
-  `payload` JSON NULL,
-  `received_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `transactionId` BIGINT NOT NULL COMMENT '交易ID',
+  `payload` JSON NULL COMMENT '通知负载JSON',
+  `receivedTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '接收时间',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_txn` (`transaction_id`)
+  KEY `idx_txn` (`transactionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付回调日志';

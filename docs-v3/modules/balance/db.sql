@@ -1,16 +1,23 @@
--- 余额与消费记录（v3 重设计）
--- 建议由订单与钱包流水生成，也可落表便于快速查询
+-- 余额与消费记录（小驼峰+审计与扩展）
 
 CREATE TABLE `consume_record` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `order_id` BIGINT NOT NULL DEFAULT 0,
-  `biz_type` TINYINT NOT NULL COMMENT '1上机 2商品 3套餐',
-  `amount` DECIMAL(12,2) NOT NULL,
-  `pay_channel` TINYINT NOT NULL,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `orderId` BIGINT NOT NULL DEFAULT 0 COMMENT '订单ID',
+  `bizType` TINYINT NOT NULL COMMENT '业务类型 1上机 2商品 3套餐',
+  `amount` DECIMAL(12,2) NOT NULL COMMENT '金额',
+  `payChannel` TINYINT NOT NULL COMMENT '支付渠道 1微信 2支付宝 3钱包',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user_time` (`user_id`,`create_time`),
-  KEY `idx_store_type` (`store_id`,`biz_type`)
+  KEY `idx_user_time` (`userId`,`createTime`),
+  KEY `idx_store_type` (`storeId`,`bizType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消费记录';

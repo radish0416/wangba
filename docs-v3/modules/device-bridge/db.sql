@@ -1,14 +1,22 @@
--- 设备桥接（v3 重设计）
+-- 设备桥接（小驼峰+审计与扩展）
 
 CREATE TABLE `device_action_log` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `seat_id` BIGINT NOT NULL,
-  `action` TINYINT NOT NULL COMMENT '1开机 2关机 3续费 4查询',
-  `request_payload` JSON NULL,
-  `response_payload` JSON NULL,
-  `success` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `seatId` BIGINT NOT NULL COMMENT '机位ID',
+  `action` TINYINT NOT NULL COMMENT '动作 1开机 2关机 3续费 4查询',
+  `requestPayload` JSON NULL COMMENT '请求负载JSON',
+  `responsePayload` JSON NULL COMMENT '响应负载JSON',
+  `success` TINYINT NOT NULL DEFAULT 1 COMMENT '是否成功 0否 1是',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_seat_time` (`seat_id`,`create_time`)
+  KEY `idx_seat_time` (`seatId`,`createTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备动作日志';

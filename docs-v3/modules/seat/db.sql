@@ -1,28 +1,45 @@
--- 机位与会话（v3 重设计）
+-- 机位与会话（小驼峰+审计与扩展）
 
 CREATE TABLE `seat` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `area_id` BIGINT NOT NULL,
-  `device_no` VARCHAR(64) NOT NULL DEFAULT '',
-  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '1空闲 2占用 3故障',
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `areaId` BIGINT NOT NULL COMMENT '区域ID',
+  `deviceNo` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '设备编号',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 1空闲 2占用 3故障',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_area` (`area_id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_area` (`areaId`),
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='机位';
 
 CREATE TABLE `seat_session` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `seat_id` BIGINT NOT NULL,
-  `user_id` BIGINT NOT NULL,
-  `order_id` BIGINT NOT NULL DEFAULT 0,
-  `start_time` DATETIME NOT NULL,
-  `end_time` DATETIME NULL,
-  `duration_sec` INT NOT NULL DEFAULT 0,
-  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '1进行中 2结束 3取消',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `seatId` BIGINT NOT NULL COMMENT '机位ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `orderId` BIGINT NOT NULL DEFAULT 0 COMMENT '订单ID',
+  `startTime` DATETIME NOT NULL COMMENT '开始时间',
+  `endTime` DATETIME NULL COMMENT '结束时间',
+  `durationSec` INT NOT NULL DEFAULT 0 COMMENT '累计时长(秒)',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 1进行中 2结束 3取消',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_seat_status` (`seat_id`,`status`),
-  KEY `idx_user_time` (`user_id`,`start_time`)
+  KEY `idx_seat_status` (`seatId`,`status`),
+  KEY `idx_user_time` (`userId`,`startTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='机位会话';

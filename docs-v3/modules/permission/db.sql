@@ -1,14 +1,23 @@
--- 权限扩展（v3 重设计）
+-- 权限扩展（小驼峰+审计与扩展）
 
 CREATE TABLE `sys_data_scope` (
-  `id` BIGINT NOT NULL,
-  `name` VARCHAR(64) NOT NULL,
-  `scope_rule` TINYINT NOT NULL COMMENT '1全部 2本门店 3本人',
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '范围名称',
+  `scopeRule` TINYINT NOT NULL COMMENT '范围规则 1全部 2本门店 3本人',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据范围定义';
 
 CREATE TABLE `sys_role_scope` (
-  `role_id` BIGINT NOT NULL,
-  `scope_id` BIGINT NOT NULL,
-  PRIMARY KEY (`role_id`,`scope_id`)
+  `roleId` BIGINT NOT NULL COMMENT '角色ID',
+  `scopeId` BIGINT NOT NULL COMMENT '范围ID',
+  PRIMARY KEY (`roleId`,`scopeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色-数据范围';

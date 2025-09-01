@@ -1,605 +1,928 @@
 -- ==== /workspace/docs-v3/modules/auth/db.sql ====
 
--- 认证与权限（v3 重设计）
+-- 认证与权限（小驼峰+审计与扩展）
 
 CREATE TABLE `sys_user` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `username` VARCHAR(64) NOT NULL,
-  `password_hash` VARCHAR(128) NOT NULL,
-  `display_name` VARCHAR(64) NOT NULL,
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `username` VARCHAR(64) NOT NULL COMMENT '用户名',
+  `passwordHash` VARCHAR(128) NOT NULL COMMENT '密码哈希',
+  `displayName` VARCHAR(64) NOT NULL COMMENT '显示名称',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0禁用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_store_username` (`store_id`,`username`)
+  UNIQUE KEY `uk_store_username` (`storeId`,`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='后台账户';
 
 CREATE TABLE `sys_role` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `name` VARCHAR(64) NOT NULL,
-  `data_scope` TINYINT NOT NULL DEFAULT 1 COMMENT '1全部 2本门店 3本人',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '角色名称',
+  `dataScope` TINYINT NOT NULL DEFAULT 1 COMMENT '数据范围 1全部 2本门店 3本人',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色';
 
 CREATE TABLE `sys_perm` (
-  `id` BIGINT NOT NULL,
-  `perm_key` VARCHAR(128) NOT NULL,
-  `desc` VARCHAR(128) NOT NULL DEFAULT '',
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `permKey` VARCHAR(128) NOT NULL COMMENT '权限键',
+  `desc` VARCHAR(128) NOT NULL DEFAULT '' COMMENT '描述',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_perm_key` (`perm_key`)
+  UNIQUE KEY `uk_perm_key` (`permKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='权限点';
 
 CREATE TABLE `sys_user_role` (
-  `user_id` BIGINT NOT NULL,
-  `role_id` BIGINT NOT NULL,
-  PRIMARY KEY (`user_id`,`role_id`)
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `roleId` BIGINT NOT NULL COMMENT '角色ID',
+  PRIMARY KEY (`userId`,`roleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-角色';
 
 CREATE TABLE `sys_role_perm` (
-  `role_id` BIGINT NOT NULL,
-  `perm_id` BIGINT NOT NULL,
-  PRIMARY KEY (`role_id`,`perm_id`)
+  `roleId` BIGINT NOT NULL COMMENT '角色ID',
+  `permId` BIGINT NOT NULL COMMENT '权限点ID',
+  PRIMARY KEY (`roleId`,`permId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色-权限';
 -- ==== /workspace/docs-v3/modules/balance/db.sql ====
 
--- 余额与消费记录（v3 重设计）
--- 建议由订单与钱包流水生成，也可落表便于快速查询
+-- 余额与消费记录（小驼峰+审计与扩展）
 
 CREATE TABLE `consume_record` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `order_id` BIGINT NOT NULL DEFAULT 0,
-  `biz_type` TINYINT NOT NULL COMMENT '1上机 2商品 3套餐',
-  `amount` DECIMAL(12,2) NOT NULL,
-  `pay_channel` TINYINT NOT NULL,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `orderId` BIGINT NOT NULL DEFAULT 0 COMMENT '订单ID',
+  `bizType` TINYINT NOT NULL COMMENT '业务类型 1上机 2商品 3套餐',
+  `amount` DECIMAL(12,2) NOT NULL COMMENT '金额',
+  `payChannel` TINYINT NOT NULL COMMENT '支付渠道 1微信 2支付宝 3钱包',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user_time` (`user_id`,`create_time`),
-  KEY `idx_store_type` (`store_id`,`biz_type`)
+  KEY `idx_user_time` (`userId`,`createTime`),
+  KEY `idx_store_type` (`storeId`,`bizType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消费记录';
 -- ==== /workspace/docs-v3/modules/base-service/db.sql ====
 
--- 基础服务（v3 重设计）
+-- 基础服务（小驼峰+审计与扩展）
 
 CREATE TABLE `file_object` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `bucket` VARCHAR(64) NOT NULL,
-  `object_key` VARCHAR(255) NOT NULL,
-  `content_type` VARCHAR(64) NOT NULL,
-  `size` BIGINT NOT NULL,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `bucket` VARCHAR(64) NOT NULL COMMENT '桶名',
+  `objectKey` VARCHAR(255) NOT NULL COMMENT '对象Key',
+  `contentType` VARCHAR(64) NOT NULL COMMENT '内容类型',
+  `size` BIGINT NOT NULL COMMENT '大小(byte)',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_bucket_key` (`bucket`,`object_key`)
+  UNIQUE KEY `uk_bucket_key` (`bucket`,`objectKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文件对象';
 
 CREATE TABLE `dict_type` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `code` VARCHAR(64) NOT NULL,
-  `name` VARCHAR(64) NOT NULL,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `code` VARCHAR(64) NOT NULL COMMENT '字典编码',
+  `name` VARCHAR(64) NOT NULL COMMENT '字典名称',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_store_code` (`store_id`,`code`)
+  UNIQUE KEY `uk_store_code` (`storeId`,`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典类型';
 
 CREATE TABLE `dict_item` (
-  `id` BIGINT NOT NULL,
-  `type_id` BIGINT NOT NULL,
-  `label` VARCHAR(64) NOT NULL,
-  `value` VARCHAR(64) NOT NULL,
-  `sort` INT NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `typeId` BIGINT NOT NULL COMMENT '类型ID',
+  `label` VARCHAR(64) NOT NULL COMMENT '显示文本',
+  `value` VARCHAR(64) NOT NULL COMMENT '值',
+  `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_type` (`type_id`)
+  KEY `idx_type` (`typeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典项';
 
 CREATE TABLE `notify_message` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `title` VARCHAR(128) NOT NULL,
-  `content` VARCHAR(500) NOT NULL,
-  `status` TINYINT NOT NULL DEFAULT 0 COMMENT '0未读 1已读',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `title` VARCHAR(128) NOT NULL COMMENT '标题',
+  `content` VARCHAR(500) NOT NULL COMMENT '内容',
+  `status` TINYINT NOT NULL DEFAULT 0 COMMENT '状态 0未读 1已读',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user_status` (`user_id`,`status`)
+  KEY `idx_user_status` (`userId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='站内消息';
 -- ==== /workspace/docs-v3/modules/campaign/db.sql ====
 
--- 活动与优惠（v3 重设计）
+-- 活动与优惠（小驼峰+审计与扩展）
 
 CREATE TABLE `campaign` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `name` VARCHAR(64) NOT NULL,
-  `type` TINYINT NOT NULL COMMENT '1折扣 2满减 3限时',
-  `status` TINYINT NOT NULL DEFAULT 0 COMMENT '0草稿 1生效 2下线',
-  `start_time` DATETIME NULL,
-  `end_time` DATETIME NULL,
-  `rules` JSON NULL,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '活动名称',
+  `type` TINYINT NOT NULL COMMENT '类型 1折扣 2满减 3限时',
+  `status` TINYINT NOT NULL DEFAULT 0 COMMENT '状态 0草稿 1生效 2下线',
+  `startTime` DATETIME NULL COMMENT '开始时间',
+  `endTime` DATETIME NULL COMMENT '结束时间',
+  `rules` JSON NULL COMMENT '规则JSON',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动';
 
 CREATE TABLE `campaign_sku` (
-  `id` BIGINT NOT NULL,
-  `campaign_id` BIGINT NOT NULL,
-  `sku_id` BIGINT NOT NULL,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `campaignId` BIGINT NOT NULL COMMENT '活动ID',
+  `skuId` BIGINT NOT NULL COMMENT 'SKU ID',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_campaign` (`campaign_id`)
+  KEY `idx_campaign` (`campaignId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动适用SKU';
 -- ==== /workspace/docs-v3/modules/content/db.sql ====
 
--- 内容（v3 重设计）
+-- 内容（小驼峰+审计与扩展）
 
 CREATE TABLE `post` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `title` VARCHAR(128) NOT NULL,
-  `content` MEDIUMTEXT NOT NULL,
-  `author_id` BIGINT NOT NULL,
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `title` VARCHAR(128) NOT NULL COMMENT '标题',
+  `content` MEDIUMTEXT NOT NULL COMMENT '内容',
+  `authorId` BIGINT NOT NULL COMMENT '作者ID',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0下线 1上线',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='帖子';
 
 CREATE TABLE `comment` (
-  `id` BIGINT NOT NULL,
-  `post_id` BIGINT NOT NULL,
-  `user_id` BIGINT NOT NULL,
-  `content` VARCHAR(500) NOT NULL,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `postId` BIGINT NOT NULL COMMENT '帖子ID',
+  `userId` BIGINT NOT NULL COMMENT '评论用户ID',
+  `content` VARCHAR(500) NOT NULL COMMENT '评论内容',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_post` (`post_id`)
+  KEY `idx_post` (`postId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='评论';
 -- ==== /workspace/docs-v3/modules/device-bridge/db.sql ====
 
--- 设备桥接（v3 重设计）
+-- 设备桥接（小驼峰+审计与扩展）
 
 CREATE TABLE `device_action_log` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `seat_id` BIGINT NOT NULL,
-  `action` TINYINT NOT NULL COMMENT '1开机 2关机 3续费 4查询',
-  `request_payload` JSON NULL,
-  `response_payload` JSON NULL,
-  `success` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `seatId` BIGINT NOT NULL COMMENT '机位ID',
+  `action` TINYINT NOT NULL COMMENT '动作 1开机 2关机 3续费 4查询',
+  `requestPayload` JSON NULL COMMENT '请求负载JSON',
+  `responsePayload` JSON NULL COMMENT '响应负载JSON',
+  `success` TINYINT NOT NULL DEFAULT 1 COMMENT '是否成功 0否 1是',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_seat_time` (`seat_id`,`create_time`)
+  KEY `idx_seat_time` (`seatId`,`createTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备动作日志';
 -- ==== /workspace/docs-v3/modules/floor/db.sql ====
 
--- 楼层与区域（v3 重设计）
+-- 楼层与区域（小驼峰+审计与扩展）
 
 CREATE TABLE `floor` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `name` VARCHAR(64) NOT NULL,
-  `sort` INT NOT NULL DEFAULT 0,
-  `status` TINYINT NOT NULL DEFAULT 1,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '楼层名称',
+  `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='楼层';
 
 CREATE TABLE `area` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `floor_id` BIGINT NOT NULL,
-  `name` VARCHAR(64) NOT NULL,
-  `sort` INT NOT NULL DEFAULT 0,
-  `status` TINYINT NOT NULL DEFAULT 1,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `floorId` BIGINT NOT NULL COMMENT '楼层ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '区域名称',
+  `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_floor` (`floor_id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_floor` (`floorId`),
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='区域';
 -- ==== /workspace/docs-v3/modules/goods/db.sql ====
 
--- 商品模块（v3 重设计）
+-- 商品模块（小驼峰+审计与扩展）
 
 CREATE TABLE `goods_category` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `name` VARCHAR(64) NOT NULL,
-  `parent_id` BIGINT NOT NULL DEFAULT 0,
-  `sort` INT NOT NULL DEFAULT 0,
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `is_deleted` TINYINT NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '类目名称',
+  `parentId` BIGINT NOT NULL DEFAULT 0 COMMENT '上级类目ID',
+  `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_store_parent` (`store_id`,`parent_id`)
+  KEY `idx_store_parent` (`storeId`,`parentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品类目';
 
 CREATE TABLE `goods` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `name` VARCHAR(128) NOT NULL,
-  `category_id` BIGINT NOT NULL,
-  `type` TINYINT NOT NULL COMMENT '1计时 2计次 3耗材 4服务',
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `is_deleted` TINYINT NOT NULL DEFAULT 0,
-  `version` INT NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `name` VARCHAR(128) NOT NULL COMMENT '商品名称',
+  `categoryId` BIGINT NOT NULL COMMENT '类目ID',
+  `type` TINYINT NOT NULL COMMENT '商品类型 1计时 2计次 3耗材 4服务',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0下架 1上架',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_store_cat` (`store_id`,`category_id`)
+  KEY `idx_store_cat` (`storeId`,`categoryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品';
 
 CREATE TABLE `goods_sku` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `goods_id` BIGINT NOT NULL,
-  `sku_code` VARCHAR(64) NOT NULL,
-  `price` DECIMAL(10,2) NOT NULL,
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `goodsId` BIGINT NOT NULL COMMENT '商品ID',
+  `skuCode` VARCHAR(64) NOT NULL COMMENT 'SKU编码',
+  `price` DECIMAL(10,2) NOT NULL COMMENT '售价',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_sku_code` (`sku_code`),
-  KEY `idx_goods` (`goods_id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  UNIQUE KEY `uk_sku_code` (`skuCode`),
+  KEY `idx_goods` (`goodsId`),
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品SKU';
 -- ==== /workspace/docs-v3/modules/inventory-耗材/db.sql ====
 
--- 耗材与库存（v3 重设计）
+-- 耗材与库存（小驼峰+审计与扩展）
 
 CREATE TABLE `inventory_sku` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `name` VARCHAR(128) NOT NULL,
-  `category` VARCHAR(64) NOT NULL DEFAULT '',
-  `unit` VARCHAR(16) NOT NULL DEFAULT 'pcs',
-  `safety_stock` INT NOT NULL DEFAULT 0,
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `name` VARCHAR(128) NOT NULL COMMENT 'SKU名称',
+  `category` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '品类',
+  `unit` VARCHAR(16) NOT NULL DEFAULT 'pcs' COMMENT '计量单位',
+  `safetyStock` INT NOT NULL DEFAULT 0 COMMENT '安全库存',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_store_cat` (`store_id`,`category`)
+  KEY `idx_store_cat` (`storeId`,`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='库存SKU';
 
 CREATE TABLE `inventory_stock` (
-  `sku_id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL,
-  `quantity` INT NOT NULL DEFAULT 0,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`sku_id`,`store_id`)
+  `skuId` BIGINT NOT NULL COMMENT 'SKU ID',
+  `storeId` BIGINT NOT NULL COMMENT '门店/租户ID',
+  `quantity` INT NOT NULL DEFAULT 0 COMMENT '库存数量',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
+  PRIMARY KEY (`skuId`,`storeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='库存数量';
 
 CREATE TABLE `inventory_ledger` (
-  `id` BIGINT NOT NULL,
-  `sku_id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL,
-  `type` TINYINT NOT NULL COMMENT '1入库 2出库 3调整',
-  `quantity` INT NOT NULL,
-  `remark` VARCHAR(255) NOT NULL DEFAULT '',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `skuId` BIGINT NOT NULL COMMENT 'SKU ID',
+  `storeId` BIGINT NOT NULL COMMENT '门店/租户ID',
+  `type` TINYINT NOT NULL COMMENT '类型 1入库 2出库 3调整',
+  `quantity` INT NOT NULL COMMENT '数量(入正出负)',
+  `remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_sku_time` (`sku_id`,`create_time`)
+  KEY `idx_sku_time` (`skuId`,`createTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='库存流水';
 -- ==== /workspace/docs-v3/modules/member/db.sql ====
 
--- 会员与等级（v3 重设计）
+-- 会员与等级（小驼峰+审计与扩展）
 
 CREATE TABLE `member_level` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `name` VARCHAR(32) NOT NULL,
-  `min_points` INT NOT NULL DEFAULT 0,
-  `discount_rate` DECIMAL(5,2) NOT NULL DEFAULT 100.00,
-  `benefits` JSON NULL,
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `is_deleted` TINYINT NOT NULL DEFAULT 0,
-  `version` INT NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `name` VARCHAR(32) NOT NULL COMMENT '等级名称',
+  `minPoints` INT NOT NULL DEFAULT 0 COMMENT '达标积分',
+  `discountRate` DECIMAL(5,2) NOT NULL DEFAULT 100.00 COMMENT '折扣(百分比)',
+  `benefits` JSON NULL COMMENT '权益列表JSON',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0禁用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会员等级';
 
 CREATE TABLE `member_user` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `level_id` BIGINT NOT NULL,
-  `valid_from` DATETIME NOT NULL,
-  `valid_to` DATETIME NULL,
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `is_deleted` TINYINT NOT NULL DEFAULT 0,
-  `version` INT NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `levelId` BIGINT NOT NULL COMMENT '等级ID',
+  `validFrom` DATETIME NOT NULL COMMENT '生效时间',
+  `validTo` DATETIME NULL COMMENT '失效时间',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0禁用 1启用',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user` (`user_id`),
-  KEY `idx_level` (`level_id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_user` (`userId`),
+  KEY `idx_level` (`levelId`),
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户会员记录';
 -- ==== /workspace/docs-v3/modules/order/db.sql ====
 
--- 订单模块（v3 重设计）
+-- 订单模块（小驼峰+审计与扩展）
 
 CREATE TABLE `order_master` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `order_type` TINYINT NOT NULL COMMENT '1上机时长 2商品 3套餐',
-  `status` TINYINT NOT NULL COMMENT '0待支付 1已支付 2已取消 3已退款 4已关闭',
-  `total_amount` DECIMAL(12,2) NOT NULL,
-  `discount_amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  `pay_amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  `pay_channel` TINYINT NOT NULL DEFAULT 0 COMMENT '0未知 1微信 2支付宝 3钱包',
-  `pay_time` DATETIME NULL,
-  `external_no` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '外部支付单号',
-  `seat_id` BIGINT NOT NULL DEFAULT 0 COMMENT '关联机位（上机订单）',
-  `source_channel` TINYINT NOT NULL DEFAULT 1 COMMENT '1后台 2小程序',
-  `remark` VARCHAR(255) NOT NULL DEFAULT '',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `is_deleted` TINYINT NOT NULL DEFAULT 0,
-  `version` INT NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `orderType` TINYINT NOT NULL COMMENT '订单类型 1上机 2商品 3套餐',
+  `status` TINYINT NOT NULL COMMENT '状态 0待支付 1已支付 2已取消 3已退款 4已关闭',
+  `totalAmount` DECIMAL(12,2) NOT NULL COMMENT '订单总额',
+  `discountAmount` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '折扣金额',
+  `payAmount` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '实付金额',
+  `payChannel` TINYINT NOT NULL DEFAULT 0 COMMENT '支付渠道 0未知 1微信 2支付宝 3钱包',
+  `payTime` DATETIME NULL COMMENT '支付时间',
+  `externalNo` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '外部支付单号',
+  `seatId` BIGINT NOT NULL DEFAULT 0 COMMENT '机位ID（上机订单）',
+  `sourceChannel` TINYINT NOT NULL DEFAULT 1 COMMENT '来源渠道 1后台 2小程序',
+  `remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user_time` (`user_id`,`create_time`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_user_time` (`userId`,`createTime`),
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
 
 CREATE TABLE `order_item` (
-  `id` BIGINT NOT NULL,
-  `order_id` BIGINT NOT NULL,
-  `sku_id` BIGINT NOT NULL DEFAULT 0,
-  `title` VARCHAR(128) NOT NULL,
-  `quantity` INT NOT NULL DEFAULT 1,
-  `price` DECIMAL(10,2) NOT NULL,
-  `amount` DECIMAL(12,2) NOT NULL,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `orderId` BIGINT NOT NULL COMMENT '订单ID',
+  `skuId` BIGINT NOT NULL DEFAULT 0 COMMENT 'SKU ID',
+  `title` VARCHAR(128) NOT NULL COMMENT '项目标题',
+  `quantity` INT NOT NULL DEFAULT 1 COMMENT '数量',
+  `price` DECIMAL(10,2) NOT NULL COMMENT '单价',
+  `amount` DECIMAL(12,2) NOT NULL COMMENT '金额',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_order` (`order_id`)
+  KEY `idx_order` (`orderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细';
 
 CREATE TABLE `order_payment` (
-  `id` BIGINT NOT NULL,
-  `order_id` BIGINT NOT NULL,
-  `pay_channel` TINYINT NOT NULL,
-  `out_trade_no` VARCHAR(64) NOT NULL,
-  `trade_no` VARCHAR(64) NOT NULL DEFAULT '',
-  `status` TINYINT NOT NULL COMMENT '0创建 1成功 2关闭 3退款',
-  `amount` DECIMAL(12,2) NOT NULL,
-  `notify_payload` JSON NULL,
-  `pay_time` DATETIME NULL,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `orderId` BIGINT NOT NULL COMMENT '订单ID',
+  `payChannel` TINYINT NOT NULL COMMENT '支付渠道 1微信 2支付宝 3钱包',
+  `outTradeNo` VARCHAR(64) NOT NULL COMMENT '商户订单号',
+  `tradeNo` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '第三方交易号',
+  `status` TINYINT NOT NULL COMMENT '状态 0创建 1成功 2关闭 3退款',
+  `amount` DECIMAL(12,2) NOT NULL COMMENT '支付金额',
+  `notifyPayload` JSON NULL COMMENT '回调负载JSON',
+  `payTime` DATETIME NULL COMMENT '支付时间',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_out_trade_no` (`out_trade_no`),
-  KEY `idx_order` (`order_id`)
+  UNIQUE KEY `uk_out_trade_no` (`outTradeNo`),
+  KEY `idx_order` (`orderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单支付记录';
 
 CREATE TABLE `order_refund` (
-  `id` BIGINT NOT NULL,
-  `order_id` BIGINT NOT NULL,
-  `amount` DECIMAL(12,2) NOT NULL,
-  `status` TINYINT NOT NULL COMMENT '0申请 1成功 2关闭',
-  `reason` VARCHAR(255) NOT NULL DEFAULT '',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `orderId` BIGINT NOT NULL COMMENT '订单ID',
+  `amount` DECIMAL(12,2) NOT NULL COMMENT '退款金额',
+  `status` TINYINT NOT NULL COMMENT '状态 0申请 1成功 2关闭',
+  `reason` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '退款原因',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_order` (`order_id`)
+  KEY `idx_order` (`orderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单退款';
 -- ==== /workspace/docs-v3/modules/package-套餐/db.sql ====
 
--- 套餐模块（v3 重设计）
+-- 套餐模块（小驼峰+审计与扩展）
 
 CREATE TABLE `package_def` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `name` VARCHAR(64) NOT NULL,
-  `type` TINYINT NOT NULL COMMENT '1时间 2次数 3混合',
-  `price` DECIMAL(10,2) NOT NULL,
-  `valid_days` INT NOT NULL DEFAULT 0,
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '套餐名称',
+  `type` TINYINT NOT NULL COMMENT '类型 1时间 2次数 3混合',
+  `price` DECIMAL(10,2) NOT NULL COMMENT '售价',
+  `validDays` INT NOT NULL DEFAULT 0 COMMENT '有效天数 0表示不限',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0下架 1上架',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='套餐定义';
 
 CREATE TABLE `package_benefit` (
-  `id` BIGINT NOT NULL,
-  `package_id` BIGINT NOT NULL,
-  `benefit_key` VARCHAR(64) NOT NULL,
-  `benefit_value` VARCHAR(128) NOT NULL,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `packageId` BIGINT NOT NULL COMMENT '套餐ID',
+  `benefitKey` VARCHAR(64) NOT NULL COMMENT '权益键，如extraTime,discount',
+  `benefitValue` VARCHAR(128) NOT NULL COMMENT '权益值',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_pkg` (`package_id`)
+  KEY `idx_pkg` (`packageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='套餐权益';
 
 CREATE TABLE `user_package` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `package_id` BIGINT NOT NULL,
-  `remain_time_sec` INT NOT NULL DEFAULT 0,
-  `remain_count` INT NOT NULL DEFAULT 0,
-  `valid_to` DATETIME NULL,
-  `status` TINYINT NOT NULL DEFAULT 1,
-  `order_id` BIGINT NOT NULL DEFAULT 0,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `packageId` BIGINT NOT NULL COMMENT '套餐ID',
+  `remainTimeSec` INT NOT NULL DEFAULT 0 COMMENT '剩余时间(秒)',
+  `remainCount` INT NOT NULL DEFAULT 0 COMMENT '剩余次数',
+  `validTo` DATETIME NULL COMMENT '有效期至',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0禁用 1启用',
+  `orderId` BIGINT NOT NULL DEFAULT 0 COMMENT '来源订单ID',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user` (`user_id`),
-  KEY `idx_pkg` (`package_id`)
+  KEY `idx_user` (`userId`),
+  KEY `idx_pkg` (`packageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户持有套餐';
 
 CREATE TABLE `package_redeem` (
-  `id` BIGINT NOT NULL,
-  `user_package_id` BIGINT NOT NULL,
-  `redeem_type` TINYINT NOT NULL COMMENT '1时间 2次数',
-  `redeem_value` INT NOT NULL,
-  `order_id` BIGINT NOT NULL DEFAULT 0,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `userPackageId` BIGINT NOT NULL COMMENT '持有记录ID',
+  `redeemType` TINYINT NOT NULL COMMENT '核销类型 1时间 2次数',
+  `redeemValue` INT NOT NULL COMMENT '核销值',
+  `orderId` BIGINT NOT NULL DEFAULT 0 COMMENT '关联订单ID',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_up` (`user_package_id`)
+  KEY `idx_up` (`userPackageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='套餐核销记录';
 -- ==== /workspace/docs-v3/modules/pay-bridge/db.sql ====
 
--- 支付桥接（v3 重设计）
+-- 支付桥接（小驼峰+审计与扩展）
 
 CREATE TABLE `pay_transaction` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `order_id` BIGINT NOT NULL,
-  `channel` TINYINT NOT NULL COMMENT '1微信 2支付宝 3钱包',
-  `trade_no` VARCHAR(64) NOT NULL,
-  `status` TINYINT NOT NULL COMMENT '0创建 1成功 2关闭 3退款',
-  `amount` DECIMAL(12,2) NOT NULL,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `orderId` BIGINT NOT NULL COMMENT '订单ID',
+  `channel` TINYINT NOT NULL COMMENT '支付渠道 1微信 2支付宝 3钱包',
+  `tradeNo` VARCHAR(64) NOT NULL COMMENT '第三方交易号',
+  `status` TINYINT NOT NULL COMMENT '状态 0创建 1成功 2关闭 3退款',
+  `amount` DECIMAL(12,2) NOT NULL COMMENT '金额',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_trade_no` (`trade_no`),
-  KEY `idx_order` (`order_id`)
+  UNIQUE KEY `uk_trade_no` (`tradeNo`),
+  KEY `idx_order` (`orderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付交易';
 
 CREATE TABLE `pay_notify_log` (
-  `id` BIGINT NOT NULL,
-  `transaction_id` BIGINT NOT NULL,
-  `payload` JSON NULL,
-  `received_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `transactionId` BIGINT NOT NULL COMMENT '交易ID',
+  `payload` JSON NULL COMMENT '通知负载JSON',
+  `receivedTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '接收时间',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_txn` (`transaction_id`)
+  KEY `idx_txn` (`transactionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付回调日志';
 -- ==== /workspace/docs-v3/modules/permission/db.sql ====
 
--- 权限扩展（v3 重设计）
+-- 权限扩展（小驼峰+审计与扩展）
 
 CREATE TABLE `sys_data_scope` (
-  `id` BIGINT NOT NULL,
-  `name` VARCHAR(64) NOT NULL,
-  `scope_rule` TINYINT NOT NULL COMMENT '1全部 2本门店 3本人',
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `name` VARCHAR(64) NOT NULL COMMENT '范围名称',
+  `scopeRule` TINYINT NOT NULL COMMENT '范围规则 1全部 2本门店 3本人',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据范围定义';
 
 CREATE TABLE `sys_role_scope` (
-  `role_id` BIGINT NOT NULL,
-  `scope_id` BIGINT NOT NULL,
-  PRIMARY KEY (`role_id`,`scope_id`)
+  `roleId` BIGINT NOT NULL COMMENT '角色ID',
+  `scopeId` BIGINT NOT NULL COMMENT '范围ID',
+  PRIMARY KEY (`roleId`,`scopeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色-数据范围';
 -- ==== /workspace/docs-v3/modules/points/db.sql ====
 
--- 积分模块（v3 重设计）
+-- 积分模块（小驼峰+审计与扩展）
 
 CREATE TABLE `points_account` (
-  `user_id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `balance` BIGINT NOT NULL DEFAULT 0,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`,`store_id`)
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `balance` BIGINT NOT NULL DEFAULT 0 COMMENT '当前积分',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
+  PRIMARY KEY (`userId`,`storeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='积分账户';
 
 CREATE TABLE `points_ledger` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `delta` INT NOT NULL,
-  `scene` VARCHAR(32) NOT NULL COMMENT 'earn|consume|adjust',
-  `biz_id` VARCHAR(64) NOT NULL DEFAULT '',
-  `remark` VARCHAR(255) NOT NULL DEFAULT '',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `delta` INT NOT NULL COMMENT '积分增减值',
+  `scene` VARCHAR(32) NOT NULL COMMENT '场景 earn|consume|adjust',
+  `bizId` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '业务单号',
+  `remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user_time` (`user_id`,`create_time`),
-  KEY `idx_store_scene` (`store_id`,`scene`)
+  KEY `idx_user_time` (`userId`,`createTime`),
+  KEY `idx_store_scene` (`storeId`,`scene`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='积分流水';
 -- ==== /workspace/docs-v3/modules/seat/db.sql ====
 
--- 机位与会话（v3 重设计）
+-- 机位与会话（小驼峰+审计与扩展）
 
 CREATE TABLE `seat` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `area_id` BIGINT NOT NULL,
-  `device_no` VARCHAR(64) NOT NULL DEFAULT '',
-  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '1空闲 2占用 3故障',
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `areaId` BIGINT NOT NULL COMMENT '区域ID',
+  `deviceNo` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '设备编号',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 1空闲 2占用 3故障',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_area` (`area_id`),
-  KEY `idx_store_status` (`store_id`,`status`)
+  KEY `idx_area` (`areaId`),
+  KEY `idx_store_status` (`storeId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='机位';
 
 CREATE TABLE `seat_session` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `seat_id` BIGINT NOT NULL,
-  `user_id` BIGINT NOT NULL,
-  `order_id` BIGINT NOT NULL DEFAULT 0,
-  `start_time` DATETIME NOT NULL,
-  `end_time` DATETIME NULL,
-  `duration_sec` INT NOT NULL DEFAULT 0,
-  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '1进行中 2结束 3取消',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `seatId` BIGINT NOT NULL COMMENT '机位ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `orderId` BIGINT NOT NULL DEFAULT 0 COMMENT '订单ID',
+  `startTime` DATETIME NOT NULL COMMENT '开始时间',
+  `endTime` DATETIME NULL COMMENT '结束时间',
+  `durationSec` INT NOT NULL DEFAULT 0 COMMENT '累计时长(秒)',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 1进行中 2结束 3取消',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_seat_status` (`seat_id`,`status`),
-  KEY `idx_user_time` (`user_id`,`start_time`)
+  KEY `idx_seat_status` (`seatId`,`status`),
+  KEY `idx_user_time` (`userId`,`startTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='机位会话';
 -- ==== /workspace/docs-v3/modules/stats/db.sql ====
 
--- 数据统计（v3 重设计）
+-- 数据统计（小驼峰+审计与扩展）
 
 CREATE TABLE `stats_daily_revenue` (
-  `biz_date` DATE NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `revenue_total` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  `orders` INT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`biz_date`,`store_id`)
+  `bizDate` DATE NOT NULL COMMENT '业务日期',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `revenueTotal` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '营收合计',
+  `orders` INT NOT NULL DEFAULT 0 COMMENT '订单数',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
+  PRIMARY KEY (`bizDate`,`storeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='每日营收汇总';
 -- ==== /workspace/docs-v3/modules/user/db.sql ====
 
--- 用户模块（v3 重设计）
--- 约定：所有表包含 store_id、create_time、update_time、is_deleted、version
+-- 用户模块（v3 重设计-小驼峰+审计与扩展）
+-- 统一字段：storeId, createBy, createTime, updateBy, updateTime, ext1..ext5
 
 CREATE TABLE `user` (
   `id` BIGINT NOT NULL COMMENT '主键ID',
-  `store_id` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
   `nickname` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '昵称',
   `mobile` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机号',
-  `avatar_url` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '头像',
+  `avatarUrl` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '头像URL',
   `gender` TINYINT NOT NULL DEFAULT 0 COMMENT '性别 0未知 1男 2女',
   `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0禁用 1启用',
-  `wechat_openid` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '微信openid',
-  `wechat_unionid` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '微信unionid',
-  `level_id` BIGINT NOT NULL DEFAULT 0 COMMENT '会员等级ID（快照）',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `is_deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
-  `version` INT NOT NULL DEFAULT 0 COMMENT '乐观锁版本',
+  `wechatOpenid` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '微信openid',
+  `wechatUnionid` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '微信unionid',
+  `levelId` BIGINT NOT NULL DEFAULT 0 COMMENT '会员等级ID（快照）',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_mobile` (`mobile`),
-  KEY `idx_store_user` (`store_id`,`status`),
-  KEY `idx_openid` (`wechat_openid`)
+  KEY `idx_store_status` (`storeId`,`status`),
+  KEY `idx_openid` (`wechatOpenid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户';
 -- ==== /workspace/docs-v3/modules/wallet/db.sql ====
 
--- 钱包模块（v3 重设计）
+-- 钱包模块（小驼峰+审计与扩展）
 
 CREATE TABLE `wallet_account` (
-  `user_id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `balance` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  `frozen` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`,`store_id`)
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `balance` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '可用余额',
+  `frozen` DECIMAL(12,2) NOT NULL DEFAULT 0.00 COMMENT '冻结金额',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
+  PRIMARY KEY (`userId`,`storeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钱包账户';
 
 CREATE TABLE `wallet_ledger` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `type` TINYINT NOT NULL COMMENT '1充值 2消费 3退款 4提现 5冻结 6解冻',
-  `amount` DECIMAL(12,2) NOT NULL,
-  `balance_after` DECIMAL(12,2) NOT NULL,
-  `biz_id` VARCHAR(64) NOT NULL DEFAULT '',
-  `remark` VARCHAR(255) NOT NULL DEFAULT '',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `type` TINYINT NOT NULL COMMENT '类型 1充值 2消费 3退款 4提现 5冻结 6解冻',
+  `amount` DECIMAL(12,2) NOT NULL COMMENT '变动金额',
+  `balanceAfter` DECIMAL(12,2) NOT NULL COMMENT '变动后余额',
+  `bizId` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '业务单号',
+  `remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user_time` (`user_id`,`create_time`),
-  KEY `idx_store_type` (`store_id`,`type`)
+  KEY `idx_user_time` (`userId`,`createTime`),
+  KEY `idx_store_type` (`storeId`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钱包流水';
 -- ==== END ====
 

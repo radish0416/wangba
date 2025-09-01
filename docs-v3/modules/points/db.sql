@@ -1,23 +1,39 @@
--- 积分模块（v3 重设计）
+-- 积分模块（小驼峰+审计与扩展）
 
 CREATE TABLE `points_account` (
-  `user_id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `balance` BIGINT NOT NULL DEFAULT 0,
-  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`,`store_id`)
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `balance` BIGINT NOT NULL DEFAULT 0 COMMENT '当前积分',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
+  PRIMARY KEY (`userId`,`storeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='积分账户';
 
 CREATE TABLE `points_ledger` (
-  `id` BIGINT NOT NULL,
-  `store_id` BIGINT NOT NULL DEFAULT 0,
-  `user_id` BIGINT NOT NULL,
-  `delta` INT NOT NULL,
-  `scene` VARCHAR(32) NOT NULL COMMENT 'earn|consume|adjust',
-  `biz_id` VARCHAR(64) NOT NULL DEFAULT '',
-  `remark` VARCHAR(255) NOT NULL DEFAULT '',
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` BIGINT NOT NULL COMMENT '主键ID',
+  `storeId` BIGINT NOT NULL DEFAULT 0 COMMENT '门店/租户ID',
+  `userId` BIGINT NOT NULL COMMENT '用户ID',
+  `delta` INT NOT NULL COMMENT '积分增减值',
+  `scene` VARCHAR(32) NOT NULL COMMENT '场景 earn|consume|adjust',
+  `bizId` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '业务单号',
+  `remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `createBy` BIGINT NOT NULL DEFAULT 0 COMMENT '创建人ID',
+  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateBy` BIGINT NOT NULL DEFAULT 0 COMMENT '修改人ID',
+  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `ext1` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段1',
+  `ext2` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段2',
+  `ext3` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段3',
+  `ext4` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段4',
+  `ext5` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '扩展字段5',
   PRIMARY KEY (`id`),
-  KEY `idx_user_time` (`user_id`,`create_time`),
-  KEY `idx_store_scene` (`store_id`,`scene`)
+  KEY `idx_user_time` (`userId`,`createTime`),
+  KEY `idx_store_scene` (`storeId`,`scene`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='积分流水';
