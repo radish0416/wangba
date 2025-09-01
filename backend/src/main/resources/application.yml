@@ -1,0 +1,14 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: cybercafe-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/cybercafe?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

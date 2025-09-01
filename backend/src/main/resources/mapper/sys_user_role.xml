@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cybercafe.repository.mapper.SysUserRoleMapper">
+
+  <!-- 结果映射 -->
+<resultMap id="BaseResultMap" type="com.cybercafe.domain.po.SysUserRolePO">
+  <result column="userId" property="userId"/>
+  <result column="roleId" property="roleId"/>
+</resultMap>
+
+  <!-- 动态查询（分页与全量共用） -->
+  <select id="selectByDynamic" resultMap="BaseResultMap">
+    SELECT `userId`, `roleId` FROM `sys_user_role`
+  <where>
+    <if test="dto.userId != null and dto.userId != ''">
+      AND `userId` = #{dto.userId}
+    </if>
+    <if test="dto.roleId != null and dto.roleId != ''">
+      AND `roleId` = #{dto.roleId}
+    </if>
+  </where>
+    ORDER BY id DESC
+  </select>
+
+  <!-- 详情查询 -->
+  <select id="selectDetail" resultMap="BaseResultMap">
+    SELECT `userId`, `roleId` FROM `sys_user_role` WHERE id = #{id}
+  </select>
+</mapper>

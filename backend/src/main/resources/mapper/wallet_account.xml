@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cybercafe.repository.mapper.WalletAccountMapper">
+
+  <!-- 结果映射 -->
+<resultMap id="BaseResultMap" type="com.cybercafe.domain.po.WalletAccountPO">
+  <result column="userId" property="userId"/>
+  <result column="storeId" property="storeId"/>
+  <result column="balance" property="balance"/>
+  <result column="frozen" property="frozen"/>
+  <result column="createBy" property="createBy"/>
+  <result column="createTime" property="createTime"/>
+  <result column="updateBy" property="updateBy"/>
+  <result column="updateTime" property="updateTime"/>
+  <result column="ext1" property="ext1"/>
+  <result column="ext2" property="ext2"/>
+  <result column="ext3" property="ext3"/>
+  <result column="ext4" property="ext4"/>
+  <result column="ext5" property="ext5"/>
+</resultMap>
+
+  <!-- 动态查询（分页与全量共用） -->
+  <select id="selectByDynamic" resultMap="BaseResultMap">
+    SELECT `userId`, `storeId`, `balance`, `frozen`, `createBy`, `createTime`, `updateBy`, `updateTime`, `ext1`, `ext2`, `ext3`, `ext4`, `ext5` FROM `wallet_account`
+  <where>
+    <if test="dto.userId != null and dto.userId != ''">
+      AND `userId` = #{dto.userId}
+    </if>
+    <if test="dto.storeId != null and dto.storeId != ''">
+      AND `storeId` = #{dto.storeId}
+    </if>
+    <if test="dto.balance != null and dto.balance != ''">
+      AND `balance` = #{dto.balance}
+    </if>
+    <if test="dto.frozen != null and dto.frozen != ''">
+      AND `frozen` = #{dto.frozen}
+    </if>
+    <if test="dto.createBy != null and dto.createBy != ''">
+      AND `createBy` = #{dto.createBy}
+    </if>
+    <if test="dto.createTime != null and dto.createTime != ''">
+      AND `createTime` = #{dto.createTime}
+    </if>
+    <if test="dto.updateBy != null and dto.updateBy != ''">
+      AND `updateBy` = #{dto.updateBy}
+    </if>
+    <if test="dto.updateTime != null and dto.updateTime != ''">
+      AND `updateTime` = #{dto.updateTime}
+    </if>
+    <if test="dto.ext1 != null and dto.ext1 != ''">
+      AND `ext1` = #{dto.ext1}
+    </if>
+    <if test="dto.ext2 != null and dto.ext2 != ''">
+      AND `ext2` = #{dto.ext2}
+    </if>
+    <if test="dto.ext3 != null and dto.ext3 != ''">
+      AND `ext3` = #{dto.ext3}
+    </if>
+    <if test="dto.ext4 != null and dto.ext4 != ''">
+      AND `ext4` = #{dto.ext4}
+    </if>
+    <if test="dto.ext5 != null and dto.ext5 != ''">
+      AND `ext5` = #{dto.ext5}
+    </if>
+  </where>
+    ORDER BY id DESC
+  </select>
+
+  <!-- 详情查询 -->
+  <select id="selectDetail" resultMap="BaseResultMap">
+    SELECT `userId`, `storeId`, `balance`, `frozen`, `createBy`, `createTime`, `updateBy`, `updateTime`, `ext1`, `ext2`, `ext3`, `ext4`, `ext5` FROM `wallet_account` WHERE id = #{id}
+  </select>
+</mapper>

@@ -1,0 +1,42 @@
+/**
+ * 本文件由工具自动生成，请勿手工修改。
+ * 生成器: tools/codegen/generate_from_sql.py
+ */
+package com.cybercafe.web.controller;
+import com.cybercafe.service.InventoryStockService;
+import com.cybercafe.domain.po.InventoryStockPO;
+import com.cybercafe.web.dto.InventoryStockQueryDTO;
+import com.cybercafe.common.ApiResponse;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/** 库存数量 控制器。 */
+@RestController
+@RequestMapping("/api/inventory_stock")
+@Tag(name = "库存数量")
+public class InventoryStockController {
+    @Autowired
+    private InventoryStockService service;
+
+@PostMapping("/listPage")
+@Operation(summary = "分页查询")
+    public ApiResponse<IPage<InventoryStockPO>> listPage(@RequestBody @Validated InventoryStockQueryDTO dto) {
+        return ApiResponse.ok(service.listPage(dto));
+    }
+
+@PostMapping("/listAll")
+@Operation(summary = "全量查询")
+    public ApiResponse<java.util.List<InventoryStockPO>> listAll(@RequestBody @Validated InventoryStockQueryDTO dto) {
+        return ApiResponse.ok(service.listAll(dto));
+    }
+
+@PostMapping("/detail")
+@Operation(summary = "详情")
+    public ApiResponse<InventoryStockPO> detail(@RequestBody java.util.Map<String, Long> req) {
+        return ApiResponse.ok(service.detail(req.get("id")));
+    }
+}
