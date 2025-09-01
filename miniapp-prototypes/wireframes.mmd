@@ -1,0 +1,19 @@
+%% 小程序页面线框（Mermaid）
+
+flowchart LR
+  Home[首页\n推荐商品/轮播] --> ProductList[商品列表]
+  Home --> Cart[购物车]
+  Home --> Profile[我的]
+
+  ProductList --> ProductDetail[商品详情\n图片/价格/库存]
+  ProductDetail --> AddToCart[加入购物车]
+  AddToCart --> Cart
+
+  Cart --> Checkout[下单确认\n收货地址/金额]
+  Checkout --> Pay[唤起支付(对接)]
+  Pay --> OrderResult[下单结果]
+
+  Profile --> Orders[我的订单]
+  Profile --> Address[地址管理]
+  Profile --> Settings[设置]
+

@@ -1,0 +1,50 @@
+%% 系统架构图（Mermaid）- Spring Boot 单体架构 + MySQL/Redis/MinIO
+
+graph TD
+  subgraph Client
+    Web[Web 前端 (Element-UI)]
+    Mini[微信小程序]
+  end
+
+  subgraph Server[应用服务 (Spring Boot 单体应用)]
+    Controller[接口层 Controller]
+    Service[应用/领域服务层]
+    Repo[仓储/数据访问层]
+    Infra[基础设施集成]
+  end
+
+  subgraph Data[数据与中间件]
+    MySQL[(MySQL)]
+    Redis[(Redis)]
+    MinIO[(MinIO 对象存储)]
+  end
+
+  subgraph External[外部系统]
+    Pay[支付服务提供商]
+    Monitor[设备监控平台]
+  end
+
+  Web -->|REST/JSON| Controller
+  Mini -->|REST/JSON| Controller
+  Controller --> Service
+  Service --> Repo
+  Service --> Infra
+  Repo -->|JPA/MyBatis| MySQL
+  Service -->|缓存模板/Redisson| Redis
+  Infra -->|S3 API| MinIO
+  Service -->|对接/SDK| Pay
+  Service -->|对接/API| Monitor
+
+  %% 横切关注点
+  subgraph CrossCutting[横切：鉴权/日志/监控/配置]
+    Auth[JWT/Session]
+    Log[日志与审计]
+    Metrics[指标与健康检查]
+    Config[配置中心/本地配置]
+  end
+
+  Controller --- Auth
+  Server --- Log
+  Server --- Metrics
+  Server --- Config
+

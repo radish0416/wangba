@@ -1,0 +1,62 @@
+%% ER 图（Mermaid ER）- 命名驼峰，MySQL
+
+erDiagram
+  USER ||--o{ ORDER : places
+  USER {
+    bigint id PK
+    varchar nickname
+    varchar phone
+    varchar avatarUrl
+    varchar passwordHash
+    datetime createdAt
+    datetime updatedAt
+  }
+
+  PRODUCT ||--o{ ORDER_ITEM : contains
+  PRODUCT {
+    bigint id PK
+    varchar name
+    text description
+    decimal price
+    int stock
+    varchar coverUrl
+    datetime createdAt
+    datetime updatedAt
+  }
+
+  ORDER ||--o{ ORDER_ITEM : has
+  ORDER {
+    bigint id PK
+    bigint userId FK
+    decimal totalAmount
+    varchar status  "CREATED/PAID/CANCELLED/REFUNDED"
+    varchar payChannel "WX/ALI/OTHER"
+    varchar payTradeNo
+    datetime paidAt
+    datetime createdAt
+    datetime updatedAt
+  }
+
+  ORDER_ITEM {
+    bigint id PK
+    bigint orderId FK
+    bigint productId FK
+    int quantity
+    decimal unitPrice
+    decimal lineAmount
+    datetime createdAt
+    datetime updatedAt
+  }
+
+  FILE_OBJECT {
+    bigint id PK
+    varchar objectKey
+    varchar bucket
+    varchar url
+    varchar bizType "AVATAR/PRODUCT/OTHER"
+    bigint ownerId
+    datetime createdAt
+  }
+
+  USER ||--o{ FILE_OBJECT : owns
+
