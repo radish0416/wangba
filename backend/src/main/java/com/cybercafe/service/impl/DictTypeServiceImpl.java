@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.DictTypeQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 字典类型 服务实现。 */
 @Service
 public class DictTypeServiceImpl implements DictTypeService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(DictTypeServiceImpl.class);
+    @Resource
     private DictTypeMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class DictTypeServiceImpl implements DictTypeService {
     @Override
     public DictTypePO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(DictTypePO po) {
+        log.info("create dict_type id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(DictTypePO po) {
+        log.info("update dict_type id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete dict_type id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

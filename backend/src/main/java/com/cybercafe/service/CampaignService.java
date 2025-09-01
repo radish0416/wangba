@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.CampaignQueryDTO;
 
 /** 活动 服务。 */
 public interface CampaignService {
-    IPage<CampaignPO> listPage(CampaignQueryDTO dto);
-    java.util.List<CampaignPO> listAll(CampaignQueryDTO dto);
-    CampaignPO detail(Long id);
+    /** 分页查询 */ IPage<CampaignPO> listPage(CampaignQueryDTO dto);
+    /** 全量查询 */ java.util.List<CampaignPO> listAll(CampaignQueryDTO dto);
+    /** 详情 */ CampaignPO detail(Long id);
+    /** 新增 */ Boolean create(CampaignPO po);
+    /** 修改 */ Boolean update(CampaignPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

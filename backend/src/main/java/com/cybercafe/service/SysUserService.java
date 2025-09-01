@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.SysUserQueryDTO;
 
 /** 后台账户 服务。 */
 public interface SysUserService {
-    IPage<SysUserPO> listPage(SysUserQueryDTO dto);
-    java.util.List<SysUserPO> listAll(SysUserQueryDTO dto);
-    SysUserPO detail(Long id);
+    /** 分页查询 */ IPage<SysUserPO> listPage(SysUserQueryDTO dto);
+    /** 全量查询 */ java.util.List<SysUserPO> listAll(SysUserQueryDTO dto);
+    /** 详情 */ SysUserPO detail(Long id);
+    /** 新增 */ Boolean create(SysUserPO po);
+    /** 修改 */ Boolean update(SysUserPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

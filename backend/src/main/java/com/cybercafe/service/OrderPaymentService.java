@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.OrderPaymentQueryDTO;
 
 /** 订单支付记录 服务。 */
 public interface OrderPaymentService {
-    IPage<OrderPaymentPO> listPage(OrderPaymentQueryDTO dto);
-    java.util.List<OrderPaymentPO> listAll(OrderPaymentQueryDTO dto);
-    OrderPaymentPO detail(Long id);
+    /** 分页查询 */ IPage<OrderPaymentPO> listPage(OrderPaymentQueryDTO dto);
+    /** 全量查询 */ java.util.List<OrderPaymentPO> listAll(OrderPaymentQueryDTO dto);
+    /** 详情 */ OrderPaymentPO detail(Long id);
+    /** 新增 */ Boolean create(OrderPaymentPO po);
+    /** 修改 */ Boolean update(OrderPaymentPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.DictTypeQueryDTO;
 
 /** 字典类型 服务。 */
 public interface DictTypeService {
-    IPage<DictTypePO> listPage(DictTypeQueryDTO dto);
-    java.util.List<DictTypePO> listAll(DictTypeQueryDTO dto);
-    DictTypePO detail(Long id);
+    /** 分页查询 */ IPage<DictTypePO> listPage(DictTypeQueryDTO dto);
+    /** 全量查询 */ java.util.List<DictTypePO> listAll(DictTypeQueryDTO dto);
+    /** 详情 */ DictTypePO detail(Long id);
+    /** 新增 */ Boolean create(DictTypePO po);
+    /** 修改 */ Boolean update(DictTypePO po);
+    /** 删除 */ Boolean delete(Long id);
 }

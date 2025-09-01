@@ -12,14 +12,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 
 /** 商品 控制器。 */
 @RestController
 @RequestMapping("/api/goods")
 @Tag(name = "商品")
 public class GoodsController {
-    @Autowired
+    @Resource
     private GoodsService service;
 
 @PostMapping("/listPage")
@@ -38,5 +38,23 @@ public class GoodsController {
 @Operation(summary = "详情")
     public ApiResponse<GoodsPO> detail(@RequestBody java.util.Map<String, Long> req) {
         return ApiResponse.ok(service.detail(req.get("id")));
+    }
+
+@PostMapping("/create")
+@Operation(summary = "新增")
+    public ApiResponse<Boolean> create(@RequestBody @Validated GoodsPO po) {
+        return ApiResponse.ok(service.create(po));
+    }
+
+@PostMapping("/update")
+@Operation(summary = "修改")
+    public ApiResponse<Boolean> update(@RequestBody @Validated GoodsPO po) {
+        return ApiResponse.ok(service.update(po));
+    }
+
+@PostMapping("/delete")
+@Operation(summary = "删除")
+    public ApiResponse<Boolean> delete(@RequestBody java.util.Map<String, Long> req) {
+        return ApiResponse.ok(service.delete(req.get("id")));
     }
 }

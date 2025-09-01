@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.OrderRefundQueryDTO;
 
 /** 订单退款 服务。 */
 public interface OrderRefundService {
-    IPage<OrderRefundPO> listPage(OrderRefundQueryDTO dto);
-    java.util.List<OrderRefundPO> listAll(OrderRefundQueryDTO dto);
-    OrderRefundPO detail(Long id);
+    /** 分页查询 */ IPage<OrderRefundPO> listPage(OrderRefundQueryDTO dto);
+    /** 全量查询 */ java.util.List<OrderRefundPO> listAll(OrderRefundQueryDTO dto);
+    /** 详情 */ OrderRefundPO detail(Long id);
+    /** 新增 */ Boolean create(OrderRefundPO po);
+    /** 修改 */ Boolean update(OrderRefundPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.WalletLedgerQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 钱包流水 服务实现。 */
 @Service
 public class WalletLedgerServiceImpl implements WalletLedgerService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(WalletLedgerServiceImpl.class);
+    @Resource
     private WalletLedgerMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class WalletLedgerServiceImpl implements WalletLedgerService {
     @Override
     public WalletLedgerPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(WalletLedgerPO po) {
+        log.info("create wallet_ledger id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(WalletLedgerPO po) {
+        log.info("update wallet_ledger id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete wallet_ledger id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

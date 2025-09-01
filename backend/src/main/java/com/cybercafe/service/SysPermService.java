@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.SysPermQueryDTO;
 
 /** 权限点 服务。 */
 public interface SysPermService {
-    IPage<SysPermPO> listPage(SysPermQueryDTO dto);
-    java.util.List<SysPermPO> listAll(SysPermQueryDTO dto);
-    SysPermPO detail(Long id);
+    /** 分页查询 */ IPage<SysPermPO> listPage(SysPermQueryDTO dto);
+    /** 全量查询 */ java.util.List<SysPermPO> listAll(SysPermQueryDTO dto);
+    /** 详情 */ SysPermPO detail(Long id);
+    /** 新增 */ Boolean create(SysPermPO po);
+    /** 修改 */ Boolean update(SysPermPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

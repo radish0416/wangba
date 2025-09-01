@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.StatsDailyRevenueQueryDTO;
 
 /** 每日营收汇总 服务。 */
 public interface StatsDailyRevenueService {
-    IPage<StatsDailyRevenuePO> listPage(StatsDailyRevenueQueryDTO dto);
-    java.util.List<StatsDailyRevenuePO> listAll(StatsDailyRevenueQueryDTO dto);
-    StatsDailyRevenuePO detail(Long id);
+    /** 分页查询 */ IPage<StatsDailyRevenuePO> listPage(StatsDailyRevenueQueryDTO dto);
+    /** 全量查询 */ java.util.List<StatsDailyRevenuePO> listAll(StatsDailyRevenueQueryDTO dto);
+    /** 详情 */ StatsDailyRevenuePO detail(Long id);
+    /** 新增 */ Boolean create(StatsDailyRevenuePO po);
+    /** 修改 */ Boolean update(StatsDailyRevenuePO po);
+    /** 删除 */ Boolean delete(Long id);
 }

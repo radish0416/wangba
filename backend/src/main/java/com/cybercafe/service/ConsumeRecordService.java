@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.ConsumeRecordQueryDTO;
 
 /** 消费记录 服务。 */
 public interface ConsumeRecordService {
-    IPage<ConsumeRecordPO> listPage(ConsumeRecordQueryDTO dto);
-    java.util.List<ConsumeRecordPO> listAll(ConsumeRecordQueryDTO dto);
-    ConsumeRecordPO detail(Long id);
+    /** 分页查询 */ IPage<ConsumeRecordPO> listPage(ConsumeRecordQueryDTO dto);
+    /** 全量查询 */ java.util.List<ConsumeRecordPO> listAll(ConsumeRecordQueryDTO dto);
+    /** 详情 */ ConsumeRecordPO detail(Long id);
+    /** 新增 */ Boolean create(ConsumeRecordPO po);
+    /** 修改 */ Boolean update(ConsumeRecordPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

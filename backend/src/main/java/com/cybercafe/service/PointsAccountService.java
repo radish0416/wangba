@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.PointsAccountQueryDTO;
 
 /** 积分账户 服务。 */
 public interface PointsAccountService {
-    IPage<PointsAccountPO> listPage(PointsAccountQueryDTO dto);
-    java.util.List<PointsAccountPO> listAll(PointsAccountQueryDTO dto);
-    PointsAccountPO detail(Long id);
+    /** 分页查询 */ IPage<PointsAccountPO> listPage(PointsAccountQueryDTO dto);
+    /** 全量查询 */ java.util.List<PointsAccountPO> listAll(PointsAccountQueryDTO dto);
+    /** 详情 */ PointsAccountPO detail(Long id);
+    /** 新增 */ Boolean create(PointsAccountPO po);
+    /** 修改 */ Boolean update(PointsAccountPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

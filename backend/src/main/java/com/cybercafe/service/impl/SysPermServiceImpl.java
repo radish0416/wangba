@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.SysPermQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 权限点 服务实现。 */
 @Service
 public class SysPermServiceImpl implements SysPermService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(SysPermServiceImpl.class);
+    @Resource
     private SysPermMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class SysPermServiceImpl implements SysPermService {
     @Override
     public SysPermPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(SysPermPO po) {
+        log.info("create sys_perm id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(SysPermPO po) {
+        log.info("update sys_perm id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete sys_perm id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

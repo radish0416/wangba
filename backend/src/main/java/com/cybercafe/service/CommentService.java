@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.CommentQueryDTO;
 
 /** 评论 服务。 */
 public interface CommentService {
-    IPage<CommentPO> listPage(CommentQueryDTO dto);
-    java.util.List<CommentPO> listAll(CommentQueryDTO dto);
-    CommentPO detail(Long id);
+    /** 分页查询 */ IPage<CommentPO> listPage(CommentQueryDTO dto);
+    /** 全量查询 */ java.util.List<CommentPO> listAll(CommentQueryDTO dto);
+    /** 详情 */ CommentPO detail(Long id);
+    /** 新增 */ Boolean create(CommentPO po);
+    /** 修改 */ Boolean update(CommentPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

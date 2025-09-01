@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.SeatQueryDTO;
 
 /** 机位 服务。 */
 public interface SeatService {
-    IPage<SeatPO> listPage(SeatQueryDTO dto);
-    java.util.List<SeatPO> listAll(SeatQueryDTO dto);
-    SeatPO detail(Long id);
+    /** 分页查询 */ IPage<SeatPO> listPage(SeatQueryDTO dto);
+    /** 全量查询 */ java.util.List<SeatPO> listAll(SeatQueryDTO dto);
+    /** 详情 */ SeatPO detail(Long id);
+    /** 新增 */ Boolean create(SeatPO po);
+    /** 修改 */ Boolean update(SeatPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

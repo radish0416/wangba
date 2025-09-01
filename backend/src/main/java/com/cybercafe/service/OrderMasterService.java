@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.OrderMasterQueryDTO;
 
 /** 订单主表 服务。 */
 public interface OrderMasterService {
-    IPage<OrderMasterPO> listPage(OrderMasterQueryDTO dto);
-    java.util.List<OrderMasterPO> listAll(OrderMasterQueryDTO dto);
-    OrderMasterPO detail(Long id);
+    /** 分页查询 */ IPage<OrderMasterPO> listPage(OrderMasterQueryDTO dto);
+    /** 全量查询 */ java.util.List<OrderMasterPO> listAll(OrderMasterQueryDTO dto);
+    /** 详情 */ OrderMasterPO detail(Long id);
+    /** 新增 */ Boolean create(OrderMasterPO po);
+    /** 修改 */ Boolean update(OrderMasterPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

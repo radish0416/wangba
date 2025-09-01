@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.NotifyMessageQueryDTO;
 
 /** 站内消息 服务。 */
 public interface NotifyMessageService {
-    IPage<NotifyMessagePO> listPage(NotifyMessageQueryDTO dto);
-    java.util.List<NotifyMessagePO> listAll(NotifyMessageQueryDTO dto);
-    NotifyMessagePO detail(Long id);
+    /** 分页查询 */ IPage<NotifyMessagePO> listPage(NotifyMessageQueryDTO dto);
+    /** 全量查询 */ java.util.List<NotifyMessagePO> listAll(NotifyMessageQueryDTO dto);
+    /** 详情 */ NotifyMessagePO detail(Long id);
+    /** 新增 */ Boolean create(NotifyMessagePO po);
+    /** 修改 */ Boolean update(NotifyMessagePO po);
+    /** 删除 */ Boolean delete(Long id);
 }

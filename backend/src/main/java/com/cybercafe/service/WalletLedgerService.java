@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.WalletLedgerQueryDTO;
 
 /** 钱包流水 服务。 */
 public interface WalletLedgerService {
-    IPage<WalletLedgerPO> listPage(WalletLedgerQueryDTO dto);
-    java.util.List<WalletLedgerPO> listAll(WalletLedgerQueryDTO dto);
-    WalletLedgerPO detail(Long id);
+    /** 分页查询 */ IPage<WalletLedgerPO> listPage(WalletLedgerQueryDTO dto);
+    /** 全量查询 */ java.util.List<WalletLedgerPO> listAll(WalletLedgerQueryDTO dto);
+    /** 详情 */ WalletLedgerPO detail(Long id);
+    /** 新增 */ Boolean create(WalletLedgerPO po);
+    /** 修改 */ Boolean update(WalletLedgerPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

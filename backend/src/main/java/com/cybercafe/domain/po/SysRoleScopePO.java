@@ -4,6 +4,7 @@
  */
 package com.cybercafe.domain.po;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.cybercafe.domain.BaseAuditPO;
 import lombok.Data;
 
 /**
@@ -11,7 +12,7 @@ import lombok.Data;
  */
 @Data
 @TableName("sys_role_scope")
-public class SysRoleScopePO {
+public class SysRoleScopePO extends BaseAuditPO {
     /** 角色ID */
     private Long roleId;
 

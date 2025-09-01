@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.GoodsQueryDTO;
 
 /** 商品 服务。 */
 public interface GoodsService {
-    IPage<GoodsPO> listPage(GoodsQueryDTO dto);
-    java.util.List<GoodsPO> listAll(GoodsQueryDTO dto);
-    GoodsPO detail(Long id);
+    /** 分页查询 */ IPage<GoodsPO> listPage(GoodsQueryDTO dto);
+    /** 全量查询 */ java.util.List<GoodsPO> listAll(GoodsQueryDTO dto);
+    /** 详情 */ GoodsPO detail(Long id);
+    /** 新增 */ Boolean create(GoodsPO po);
+    /** 修改 */ Boolean update(GoodsPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

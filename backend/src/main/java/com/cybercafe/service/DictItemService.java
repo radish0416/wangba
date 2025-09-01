@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.DictItemQueryDTO;
 
 /** 字典项 服务。 */
 public interface DictItemService {
-    IPage<DictItemPO> listPage(DictItemQueryDTO dto);
-    java.util.List<DictItemPO> listAll(DictItemQueryDTO dto);
-    DictItemPO detail(Long id);
+    /** 分页查询 */ IPage<DictItemPO> listPage(DictItemQueryDTO dto);
+    /** 全量查询 */ java.util.List<DictItemPO> listAll(DictItemQueryDTO dto);
+    /** 详情 */ DictItemPO detail(Long id);
+    /** 新增 */ Boolean create(DictItemPO po);
+    /** 修改 */ Boolean update(DictItemPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

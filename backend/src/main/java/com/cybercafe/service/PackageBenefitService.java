@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.PackageBenefitQueryDTO;
 
 /** 套餐权益 服务。 */
 public interface PackageBenefitService {
-    IPage<PackageBenefitPO> listPage(PackageBenefitQueryDTO dto);
-    java.util.List<PackageBenefitPO> listAll(PackageBenefitQueryDTO dto);
-    PackageBenefitPO detail(Long id);
+    /** 分页查询 */ IPage<PackageBenefitPO> listPage(PackageBenefitQueryDTO dto);
+    /** 全量查询 */ java.util.List<PackageBenefitPO> listAll(PackageBenefitQueryDTO dto);
+    /** 详情 */ PackageBenefitPO detail(Long id);
+    /** 新增 */ Boolean create(PackageBenefitPO po);
+    /** 修改 */ Boolean update(PackageBenefitPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

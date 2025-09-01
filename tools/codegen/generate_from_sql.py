@@ -27,7 +27,7 @@ JAVA_TYPE_MAP = {
     'decimal': 'java.math.BigDecimal'
 }
 
-SKIP_FIELDS_SERVICE = set()  # generate all fields
+COMMON_AUDIT_FIELDS = { 'storeId','createBy','createTime','updateBy','updateTime','ext1','ext2','ext3','ext4','ext5' }
 
 HEADER = """/**
  * 本文件由工具自动生成，请勿手工修改。\n * 生成器: tools/codegen/generate_from_sql.py
@@ -47,17 +47,14 @@ def sql_type_to_java(sql_type: str) -> Tuple[str, List[str]]:
 
 
 def to_camel(s: str) -> str:
-    # assume already lowerCamelCase; keep as-is
     return s
 
 
 def upper_camel(s: str) -> str:
     parts = re.split(r'[_-]', s)
-    s2 = parts[0][:1].upper() + parts[0][1:]
-    if len(parts) > 1:
-        s2 = ''.join(p.capitalize() for p in parts)
-    # if already camel keep
-    return s2
+    if len(parts) == 1:
+        return s[:1].upper() + s[1:]
+    return ''.join(p.capitalize() for p in parts)
 
 
 def parse_tables(sql_text: str):
@@ -71,7 +68,6 @@ def parse_tables(sql_text: str):
             typ = c.group('type')
             comment = c.group('comment')
             columns.append((col, typ, comment))
-        # table comment
         tail = sql_text[m.start():sql_text.find(';', m.end())]
         tm = SQL_TBL_COMMENT_RE.search(tail)
         tcomment = tm.group('comment') if tm else name
@@ -87,12 +83,13 @@ def ensure_dirs():
 
 def gen_po(table, comment, columns):
     class_name = upper_camel(table) + 'PO'
-    imports = set(['com.baomidou.mybatisplus.annotation.TableName', 'lombok.Data'])
-    id_field = columns[0][0] if columns else 'id'
+    imports = set(['com.baomidou.mybatisplus.annotation.TableName', 'lombok.Data', f'{JAVA_PACKAGE_BASE}.domain.BaseAuditPO'])
     has_id = any(col == 'id' for col, _, _ in columns)
     if has_id:
         imports.add('com.baomidou.mybatisplus.annotation.TableId')
-    for _, t, _ in columns:
+    for col, t, _ in columns:
+        if col in COMMON_AUDIT_FIELDS:
+            continue
         j, imps = sql_type_to_java(t)
         for imp in imps:
             imports.add(imp)
@@ -101,8 +98,10 @@ def gen_po(table, comment, columns):
         lines.append(f"import {imp};\n")
     lines.append("\n/**\n * %s 实体。\n */\n" % comment)
     lines.append("@Data\n@TableName(\"%s\")\n" % table)
-    lines.append(f"public class {class_name} {{\n")
+    lines.append(f"public class {class_name} extends BaseAuditPO {{\n")
     for col, t, c in columns:
+        if col in COMMON_AUDIT_FIELDS:
+            continue
         j, _ = sql_type_to_java(t)
         if col == 'id' and has_id:
             lines.append("    @TableId\n")
@@ -116,31 +115,36 @@ def gen_po(table, comment, columns):
 def gen_dto_vo(table, comment, columns):
     base_name = upper_camel(table)
     # QueryDTO
-    dto_lines = [HEADER, f"package {JAVA_PACKAGE_BASE}.web.dto;\n", 'import io.swagger.v3.oas.annotations.media.Schema;\n']
-    dto_lines.append("\n/**\n * %s 查询入参。\n */\n" % comment)
-    dto_lines.append(f"public class {base_name}QueryDTO {{\n")
-    for col, t, c in columns:
+    dto_lines = [HEADER, f"package {JAVA_PACKAGE_BASE}.web.dto;\n", 'import io.swagger.v3.oas.annotations.media.Schema;\n', f"import {JAVA_PACKAGE_BASE}.web.BaseAuditDTO;\n"]
+    for _, t, _ in columns:
         j, imps = sql_type_to_java(t)
         if imps:
-            dto_lines.insert(2, f"import {imps[0]};\n")
+            dto_lines.insert(1, f"import {imps[0]};\n")
+    dto_lines.append("\n/**\n * %s 查询入参。\n */\n" % comment)
+    dto_lines.append(f"public class {base_name}QueryDTO extends BaseAuditDTO {{\n")
+    for col, t, c in columns:
+        if col in COMMON_AUDIT_FIELDS:
+            continue
+        j, _ = sql_type_to_java(t)
         dto_lines.append(f"    /** {c} */\n")
         dto_lines.append(f"    @Schema(description = \"{c}\")\n")
         dto_lines.append(f"    public {j} {to_camel(col)};\n\n")
-    # pagination
     dto_lines.append("    /** 当前页 */\n    public Long current;\n\n")
     dto_lines.append("    /** 每页大小 */\n    public Long size;\n")
     dto_lines.append("}\n")
     (OUT_JAVA / 'web' / 'dto' / f"{base_name}QueryDTO.java").write_text(''.join(dto_lines))
 
     # VO
-    vo_lines = [HEADER, f"package {JAVA_PACKAGE_BASE}.web.vo;\n",]
+    vo_lines = [HEADER, f"package {JAVA_PACKAGE_BASE}.web.vo;\n", f"import {JAVA_PACKAGE_BASE}.web.BaseAuditVO;\n"]
     for _, t, _ in columns:
         j, imps = sql_type_to_java(t)
         if imps:
             vo_lines.insert(1, f"import {imps[0]};\n")
     vo_lines.append("\n/**\n * %s 视图对象。\n */\n" % comment)
-    vo_lines.append(f"public class {base_name}VO {{\n")
+    vo_lines.append(f"public class {base_name}VO extends BaseAuditVO {{\n")
     for col, t, c in columns:
+        if col in COMMON_AUDIT_FIELDS:
+            continue
         j, _ = sql_type_to_java(t)
         vo_lines.append(f"    /** {c} */\n")
         vo_lines.append(f"    public {j} {to_camel(col)};\n\n")
@@ -206,9 +210,12 @@ def gen_service_controller(table, comment, po_class):
                  f"import {JAVA_PACKAGE_BASE}.web.dto.{base_name}QueryDTO;\n\n",
                  f"/** {comment} 服务。 */\n",
                  f"public interface {service_name} {{\n",
-                 f"    IPage<{po_class}> listPage({base_name}QueryDTO dto);\n",
-                 f"    java.util.List<{po_class}> listAll({base_name}QueryDTO dto);\n",
-                 f"    {po_class} detail(Long id);\n",
+                 f"    /** 分页查询 */ IPage<{po_class}> listPage({base_name}QueryDTO dto);\n",
+                 f"    /** 全量查询 */ java.util.List<{po_class}> listAll({base_name}QueryDTO dto);\n",
+                 f"    /** 详情 */ {po_class} detail(Long id);\n",
+                 f"    /** 新增 */ Boolean create({po_class} po);\n",
+                 f"    /** 修改 */ Boolean update({po_class} po);\n",
+                 f"    /** 删除 */ Boolean delete(Long id);\n",
                  "}\n"]
     (OUT_JAVA / 'service' / f"{service_name}.java").write_text(''.join(svc_lines))
 
@@ -221,14 +228,20 @@ def gen_service_controller(table, comment, po_class):
                   'import com.baomidou.mybatisplus.extension.plugins.pagination.Page;\n',
                   f"import {JAVA_PACKAGE_BASE}.web.dto.{base_name}QueryDTO;\n",
                   'import org.springframework.stereotype.Service;\n',
-                  'import org.springframework.beans.factory.annotation.Autowired;\n\n',
+                  'import jakarta.annotation.Resource;\n',
+                  'import org.slf4j.Logger;\n',
+                  'import org.slf4j.LoggerFactory;\n\n',
                   f"/** {comment} 服务实现。 */\n",
                   '@Service\n',
                   f"public class {impl_name} implements {service_name} {{\n",
-                  f"    @Autowired\n    private {upper_camel(table)}Mapper mapper;\n\n",
+                  f"    private static final Logger log = LoggerFactory.getLogger({impl_name}.class);\n",
+                  f"    @Resource\n    private {upper_camel(table)}Mapper mapper;\n\n",
                   f"    @Override\n    public IPage<{po_class}> listPage({base_name}QueryDTO dto) {{\n        Page<?> page = new Page<>(dto.current == null ? 1 : dto.current, dto.size == null ? 10 : dto.size);\n        return mapper.selectByDynamic(page, dto);\n    }}\n\n",
                   f"    @Override\n    public java.util.List<{po_class}> listAll({base_name}QueryDTO dto) {{\n        return mapper.selectByDynamic(new Page<>(1, Integer.MAX_VALUE), dto).getRecords();\n    }}\n\n",
-                  f"    @Override\n    public {po_class} detail(Long id) {{\n        return mapper.selectDetail(id);\n    }}\n",
+                  f"    @Override\n    public {po_class} detail(Long id) {{\n        return mapper.selectDetail(id);\n    }}\n\n",
+                  f"    @Override\n    public Boolean create({po_class} po) {{\n        log.info(\"create {table} id={{}}\", po.getId());\n        return mapper.insert(po) > 0;\n    }}\n\n",
+                  f"    @Override\n    public Boolean update({po_class} po) {{\n        log.info(\"update {table} id={{}}\", po.getId());\n        return mapper.updateById(po) > 0;\n    }}\n\n",
+                  f"    @Override\n    public Boolean delete(Long id) {{\n        log.warn(\"delete {table} id={{}}\", id);\n        return mapper.deleteById(id) > 0;\n    }}\n",
                   "}\n"]
     (OUT_JAVA / 'service' / 'impl' / f"{impl_name}.java").write_text(''.join(impl_lines))
 
@@ -243,18 +256,24 @@ def gen_service_controller(table, comment, po_class):
                  'import io.swagger.v3.oas.annotations.Operation;\n',
                  'import org.springframework.validation.annotation.Validated;\n',
                  'import org.springframework.web.bind.annotation.*;\n',
-                 'import org.springframework.beans.factory.annotation.Autowired;\n\n',
+                 'import jakarta.annotation.Resource;\n\n',
                  f"/** {comment} 控制器。 */\n",
                  '@RestController\n', f"@RequestMapping(\"/api/{table}\")\n",
                  '@Tag(name = "' + comment + '")\n',
                  f"public class {base_name}Controller {{\n",
-                 f"    @Autowired\n    private {service_name} service;\n\n",
+                 f"    @Resource\n    private {service_name} service;\n\n",
                  '@PostMapping("/listPage")\n@Operation(summary = "分页查询")\n',
                  f"    public ApiResponse<IPage<{po_class}>> listPage(@RequestBody @Validated {base_name}QueryDTO dto) {{\n        return ApiResponse.ok(service.listPage(dto));\n    }}\n\n",
                  '@PostMapping("/listAll")\n@Operation(summary = "全量查询")\n',
                  f"    public ApiResponse<java.util.List<{po_class}>> listAll(@RequestBody @Validated {base_name}QueryDTO dto) {{\n        return ApiResponse.ok(service.listAll(dto));\n    }}\n\n",
                  '@PostMapping("/detail")\n@Operation(summary = "详情")\n',
-                 f"    public ApiResponse<{po_class}> detail(@RequestBody java.util.Map<String, Long> req) {{\n        return ApiResponse.ok(service.detail(req.get(\"id\")));\n    }}\n",
+                 f"    public ApiResponse<{po_class}> detail(@RequestBody java.util.Map<String, Long> req) {{\n        return ApiResponse.ok(service.detail(req.get(\"id\")));\n    }}\n\n",
+                 '@PostMapping("/create")\n@Operation(summary = "新增")\n',
+                 f"    public ApiResponse<Boolean> create(@RequestBody @Validated {po_class} po) {{\n        return ApiResponse.ok(service.create(po));\n    }}\n\n",
+                 '@PostMapping("/update")\n@Operation(summary = "修改")\n',
+                 f"    public ApiResponse<Boolean> update(@RequestBody @Validated {po_class} po) {{\n        return ApiResponse.ok(service.update(po));\n    }}\n\n",
+                 '@PostMapping("/delete")\n@Operation(summary = "删除")\n',
+                 f"    public ApiResponse<Boolean> delete(@RequestBody java.util.Map<String, Long> req) {{\n        return ApiResponse.ok(service.delete(req.get(\"id\")));\n    }}\n",
                  "}\n"]
     (OUT_JAVA / 'web' / 'controller' / f"{base_name}Controller.java").write_text(''.join(ctl_lines))
 

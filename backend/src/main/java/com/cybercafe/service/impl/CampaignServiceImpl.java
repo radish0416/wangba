@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.CampaignQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 活动 服务实现。 */
 @Service
 public class CampaignServiceImpl implements CampaignService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(CampaignServiceImpl.class);
+    @Resource
     private CampaignMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     public CampaignPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(CampaignPO po) {
+        log.info("create campaign id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(CampaignPO po) {
+        log.info("update campaign id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete campaign id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

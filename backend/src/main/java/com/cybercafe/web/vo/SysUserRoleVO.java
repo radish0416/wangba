@@ -3,11 +3,12 @@
  * 生成器: tools/codegen/generate_from_sql.py
  */
 package com.cybercafe.web.vo;
+import com.cybercafe.web.BaseAuditVO;
 
 /**
  * 用户-角色 视图对象。
  */
-public class SysUserRoleVO {
+public class SysUserRoleVO extends BaseAuditVO {
     /** 用户ID */
     public Long userId;
 

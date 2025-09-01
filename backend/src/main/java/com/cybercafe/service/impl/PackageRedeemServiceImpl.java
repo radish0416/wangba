@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.PackageRedeemQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 套餐核销记录 服务实现。 */
 @Service
 public class PackageRedeemServiceImpl implements PackageRedeemService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(PackageRedeemServiceImpl.class);
+    @Resource
     private PackageRedeemMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class PackageRedeemServiceImpl implements PackageRedeemService {
     @Override
     public PackageRedeemPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(PackageRedeemPO po) {
+        log.info("create package_redeem id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(PackageRedeemPO po) {
+        log.info("update package_redeem id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete package_redeem id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

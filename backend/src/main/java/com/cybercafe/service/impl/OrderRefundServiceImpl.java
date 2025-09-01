@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.OrderRefundQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 订单退款 服务实现。 */
 @Service
 public class OrderRefundServiceImpl implements OrderRefundService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(OrderRefundServiceImpl.class);
+    @Resource
     private OrderRefundMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class OrderRefundServiceImpl implements OrderRefundService {
     @Override
     public OrderRefundPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(OrderRefundPO po) {
+        log.info("create order_refund id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(OrderRefundPO po) {
+        log.info("update order_refund id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete order_refund id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

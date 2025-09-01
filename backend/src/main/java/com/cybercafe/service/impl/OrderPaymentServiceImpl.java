@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.OrderPaymentQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 订单支付记录 服务实现。 */
 @Service
 public class OrderPaymentServiceImpl implements OrderPaymentService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(OrderPaymentServiceImpl.class);
+    @Resource
     private OrderPaymentMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
     @Override
     public OrderPaymentPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(OrderPaymentPO po) {
+        log.info("create order_payment id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(OrderPaymentPO po) {
+        log.info("update order_payment id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete order_payment id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

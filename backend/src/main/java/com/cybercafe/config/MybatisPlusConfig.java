@@ -2,6 +2,7 @@ package com.cybercafe.config;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,5 +20,14 @@ public class MybatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
         return interceptor;
+    }
+
+    /**
+     * 注册审计拦截器。
+     * @return 自定义配置
+     */
+    @Bean
+    public ConfigurationCustomizer auditInterceptorCustomizer() {
+        return configuration -> configuration.addInterceptor(new MybatisAuditInterceptor());
     }
 }

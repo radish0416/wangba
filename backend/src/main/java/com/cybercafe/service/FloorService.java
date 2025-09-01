@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.FloorQueryDTO;
 
 /** 楼层 服务。 */
 public interface FloorService {
-    IPage<FloorPO> listPage(FloorQueryDTO dto);
-    java.util.List<FloorPO> listAll(FloorQueryDTO dto);
-    FloorPO detail(Long id);
+    /** 分页查询 */ IPage<FloorPO> listPage(FloorQueryDTO dto);
+    /** 全量查询 */ java.util.List<FloorPO> listAll(FloorQueryDTO dto);
+    /** 详情 */ FloorPO detail(Long id);
+    /** 新增 */ Boolean create(FloorPO po);
+    /** 修改 */ Boolean update(FloorPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

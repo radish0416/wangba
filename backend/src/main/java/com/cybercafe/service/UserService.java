@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.UserQueryDTO;
 
 /** 用户 服务。 */
 public interface UserService {
-    IPage<UserPO> listPage(UserQueryDTO dto);
-    java.util.List<UserPO> listAll(UserQueryDTO dto);
-    UserPO detail(Long id);
+    /** 分页查询 */ IPage<UserPO> listPage(UserQueryDTO dto);
+    /** 全量查询 */ java.util.List<UserPO> listAll(UserQueryDTO dto);
+    /** 详情 */ UserPO detail(Long id);
+    /** 新增 */ Boolean create(UserPO po);
+    /** 修改 */ Boolean update(UserPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

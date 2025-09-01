@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.InventoryLedgerQueryDTO;
 
 /** 库存流水 服务。 */
 public interface InventoryLedgerService {
-    IPage<InventoryLedgerPO> listPage(InventoryLedgerQueryDTO dto);
-    java.util.List<InventoryLedgerPO> listAll(InventoryLedgerQueryDTO dto);
-    InventoryLedgerPO detail(Long id);
+    /** 分页查询 */ IPage<InventoryLedgerPO> listPage(InventoryLedgerQueryDTO dto);
+    /** 全量查询 */ java.util.List<InventoryLedgerPO> listAll(InventoryLedgerQueryDTO dto);
+    /** 详情 */ InventoryLedgerPO detail(Long id);
+    /** 新增 */ Boolean create(InventoryLedgerPO po);
+    /** 修改 */ Boolean update(InventoryLedgerPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

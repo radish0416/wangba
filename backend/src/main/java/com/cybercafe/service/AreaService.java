@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.AreaQueryDTO;
 
 /** 区域 服务。 */
 public interface AreaService {
-    IPage<AreaPO> listPage(AreaQueryDTO dto);
-    java.util.List<AreaPO> listAll(AreaQueryDTO dto);
-    AreaPO detail(Long id);
+    /** 分页查询 */ IPage<AreaPO> listPage(AreaQueryDTO dto);
+    /** 全量查询 */ java.util.List<AreaPO> listAll(AreaQueryDTO dto);
+    /** 详情 */ AreaPO detail(Long id);
+    /** 新增 */ Boolean create(AreaPO po);
+    /** 修改 */ Boolean update(AreaPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

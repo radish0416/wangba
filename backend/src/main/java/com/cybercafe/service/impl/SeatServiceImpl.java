@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.SeatQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 机位 服务实现。 */
 @Service
 public class SeatServiceImpl implements SeatService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(SeatServiceImpl.class);
+    @Resource
     private SeatMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class SeatServiceImpl implements SeatService {
     @Override
     public SeatPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(SeatPO po) {
+        log.info("create seat id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(SeatPO po) {
+        log.info("update seat id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete seat id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

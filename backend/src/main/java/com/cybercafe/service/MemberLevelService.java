@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.MemberLevelQueryDTO;
 
 /** 会员等级 服务。 */
 public interface MemberLevelService {
-    IPage<MemberLevelPO> listPage(MemberLevelQueryDTO dto);
-    java.util.List<MemberLevelPO> listAll(MemberLevelQueryDTO dto);
-    MemberLevelPO detail(Long id);
+    /** 分页查询 */ IPage<MemberLevelPO> listPage(MemberLevelQueryDTO dto);
+    /** 全量查询 */ java.util.List<MemberLevelPO> listAll(MemberLevelQueryDTO dto);
+    /** 详情 */ MemberLevelPO detail(Long id);
+    /** 新增 */ Boolean create(MemberLevelPO po);
+    /** 修改 */ Boolean update(MemberLevelPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

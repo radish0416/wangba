@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.PostQueryDTO;
 
 /** 帖子 服务。 */
 public interface PostService {
-    IPage<PostPO> listPage(PostQueryDTO dto);
-    java.util.List<PostPO> listAll(PostQueryDTO dto);
-    PostPO detail(Long id);
+    /** 分页查询 */ IPage<PostPO> listPage(PostQueryDTO dto);
+    /** 全量查询 */ java.util.List<PostPO> listAll(PostQueryDTO dto);
+    /** 详情 */ PostPO detail(Long id);
+    /** 新增 */ Boolean create(PostPO po);
+    /** 修改 */ Boolean update(PostPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

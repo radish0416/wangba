@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.OrderItemQueryDTO;
 
 /** 订单明细 服务。 */
 public interface OrderItemService {
-    IPage<OrderItemPO> listPage(OrderItemQueryDTO dto);
-    java.util.List<OrderItemPO> listAll(OrderItemQueryDTO dto);
-    OrderItemPO detail(Long id);
+    /** 分页查询 */ IPage<OrderItemPO> listPage(OrderItemQueryDTO dto);
+    /** 全量查询 */ java.util.List<OrderItemPO> listAll(OrderItemQueryDTO dto);
+    /** 详情 */ OrderItemPO detail(Long id);
+    /** 新增 */ Boolean create(OrderItemPO po);
+    /** 修改 */ Boolean update(OrderItemPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

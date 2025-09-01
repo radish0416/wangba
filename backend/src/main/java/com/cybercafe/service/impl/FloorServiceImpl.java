@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.FloorQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 楼层 服务实现。 */
 @Service
 public class FloorServiceImpl implements FloorService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(FloorServiceImpl.class);
+    @Resource
     private FloorMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class FloorServiceImpl implements FloorService {
     @Override
     public FloorPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(FloorPO po) {
+        log.info("create floor id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(FloorPO po) {
+        log.info("update floor id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete floor id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

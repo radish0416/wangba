@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.FileObjectQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 文件对象 服务实现。 */
 @Service
 public class FileObjectServiceImpl implements FileObjectService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(FileObjectServiceImpl.class);
+    @Resource
     private FileObjectMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class FileObjectServiceImpl implements FileObjectService {
     @Override
     public FileObjectPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(FileObjectPO po) {
+        log.info("create file_object id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(FileObjectPO po) {
+        log.info("update file_object id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete file_object id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

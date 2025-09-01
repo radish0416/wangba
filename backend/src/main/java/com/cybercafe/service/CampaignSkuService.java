@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.CampaignSkuQueryDTO;
 
 /** 活动适用SKU 服务。 */
 public interface CampaignSkuService {
-    IPage<CampaignSkuPO> listPage(CampaignSkuQueryDTO dto);
-    java.util.List<CampaignSkuPO> listAll(CampaignSkuQueryDTO dto);
-    CampaignSkuPO detail(Long id);
+    /** 分页查询 */ IPage<CampaignSkuPO> listPage(CampaignSkuQueryDTO dto);
+    /** 全量查询 */ java.util.List<CampaignSkuPO> listAll(CampaignSkuQueryDTO dto);
+    /** 详情 */ CampaignSkuPO detail(Long id);
+    /** 新增 */ Boolean create(CampaignSkuPO po);
+    /** 修改 */ Boolean update(CampaignSkuPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

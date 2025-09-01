@@ -12,14 +12,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 
 /** 积分账户 控制器。 */
 @RestController
 @RequestMapping("/api/points_account")
 @Tag(name = "积分账户")
 public class PointsAccountController {
-    @Autowired
+    @Resource
     private PointsAccountService service;
 
 @PostMapping("/listPage")
@@ -38,5 +38,23 @@ public class PointsAccountController {
 @Operation(summary = "详情")
     public ApiResponse<PointsAccountPO> detail(@RequestBody java.util.Map<String, Long> req) {
         return ApiResponse.ok(service.detail(req.get("id")));
+    }
+
+@PostMapping("/create")
+@Operation(summary = "新增")
+    public ApiResponse<Boolean> create(@RequestBody @Validated PointsAccountPO po) {
+        return ApiResponse.ok(service.create(po));
+    }
+
+@PostMapping("/update")
+@Operation(summary = "修改")
+    public ApiResponse<Boolean> update(@RequestBody @Validated PointsAccountPO po) {
+        return ApiResponse.ok(service.update(po));
+    }
+
+@PostMapping("/delete")
+@Operation(summary = "删除")
+    public ApiResponse<Boolean> delete(@RequestBody java.util.Map<String, Long> req) {
+        return ApiResponse.ok(service.delete(req.get("id")));
     }
 }

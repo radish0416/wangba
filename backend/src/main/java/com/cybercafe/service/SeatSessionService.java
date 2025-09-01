@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.SeatSessionQueryDTO;
 
 /** 机位会话 服务。 */
 public interface SeatSessionService {
-    IPage<SeatSessionPO> listPage(SeatSessionQueryDTO dto);
-    java.util.List<SeatSessionPO> listAll(SeatSessionQueryDTO dto);
-    SeatSessionPO detail(Long id);
+    /** 分页查询 */ IPage<SeatSessionPO> listPage(SeatSessionQueryDTO dto);
+    /** 全量查询 */ java.util.List<SeatSessionPO> listAll(SeatSessionQueryDTO dto);
+    /** 详情 */ SeatSessionPO detail(Long id);
+    /** 新增 */ Boolean create(SeatSessionPO po);
+    /** 修改 */ Boolean update(SeatSessionPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

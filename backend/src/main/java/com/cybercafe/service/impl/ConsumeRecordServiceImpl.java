@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.ConsumeRecordQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 消费记录 服务实现。 */
 @Service
 public class ConsumeRecordServiceImpl implements ConsumeRecordService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(ConsumeRecordServiceImpl.class);
+    @Resource
     private ConsumeRecordMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class ConsumeRecordServiceImpl implements ConsumeRecordService {
     @Override
     public ConsumeRecordPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(ConsumeRecordPO po) {
+        log.info("create consume_record id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(ConsumeRecordPO po) {
+        log.info("update consume_record id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete consume_record id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

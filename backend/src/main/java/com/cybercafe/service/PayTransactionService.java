@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.PayTransactionQueryDTO;
 
 /** 支付交易 服务。 */
 public interface PayTransactionService {
-    IPage<PayTransactionPO> listPage(PayTransactionQueryDTO dto);
-    java.util.List<PayTransactionPO> listAll(PayTransactionQueryDTO dto);
-    PayTransactionPO detail(Long id);
+    /** 分页查询 */ IPage<PayTransactionPO> listPage(PayTransactionQueryDTO dto);
+    /** 全量查询 */ java.util.List<PayTransactionPO> listAll(PayTransactionQueryDTO dto);
+    /** 详情 */ PayTransactionPO detail(Long id);
+    /** 新增 */ Boolean create(PayTransactionPO po);
+    /** 修改 */ Boolean update(PayTransactionPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

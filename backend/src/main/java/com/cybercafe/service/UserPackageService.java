@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.UserPackageQueryDTO;
 
 /** 用户持有套餐 服务。 */
 public interface UserPackageService {
-    IPage<UserPackagePO> listPage(UserPackageQueryDTO dto);
-    java.util.List<UserPackagePO> listAll(UserPackageQueryDTO dto);
-    UserPackagePO detail(Long id);
+    /** 分页查询 */ IPage<UserPackagePO> listPage(UserPackageQueryDTO dto);
+    /** 全量查询 */ java.util.List<UserPackagePO> listAll(UserPackageQueryDTO dto);
+    /** 详情 */ UserPackagePO detail(Long id);
+    /** 新增 */ Boolean create(UserPackagePO po);
+    /** 修改 */ Boolean update(UserPackagePO po);
+    /** 删除 */ Boolean delete(Long id);
 }

@@ -4,11 +4,12 @@
  */
 package com.cybercafe.web.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.cybercafe.web.BaseAuditDTO;
 
 /**
  * 角色-数据范围 查询入参。
  */
-public class SysRoleScopeQueryDTO {
+public class SysRoleScopeQueryDTO extends BaseAuditDTO {
     /** 角色ID */
     @Schema(description = "角色ID")
     public Long roleId;

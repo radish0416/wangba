@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.InventorySkuQueryDTO;
 
 /** 库存SKU 服务。 */
 public interface InventorySkuService {
-    IPage<InventorySkuPO> listPage(InventorySkuQueryDTO dto);
-    java.util.List<InventorySkuPO> listAll(InventorySkuQueryDTO dto);
-    InventorySkuPO detail(Long id);
+    /** 分页查询 */ IPage<InventorySkuPO> listPage(InventorySkuQueryDTO dto);
+    /** 全量查询 */ java.util.List<InventorySkuPO> listAll(InventorySkuQueryDTO dto);
+    /** 详情 */ InventorySkuPO detail(Long id);
+    /** 新增 */ Boolean create(InventorySkuPO po);
+    /** 修改 */ Boolean update(InventorySkuPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.WalletAccountQueryDTO;
 
 /** 钱包账户 服务。 */
 public interface WalletAccountService {
-    IPage<WalletAccountPO> listPage(WalletAccountQueryDTO dto);
-    java.util.List<WalletAccountPO> listAll(WalletAccountQueryDTO dto);
-    WalletAccountPO detail(Long id);
+    /** 分页查询 */ IPage<WalletAccountPO> listPage(WalletAccountQueryDTO dto);
+    /** 全量查询 */ java.util.List<WalletAccountPO> listAll(WalletAccountQueryDTO dto);
+    /** 详情 */ WalletAccountPO detail(Long id);
+    /** 新增 */ Boolean create(WalletAccountPO po);
+    /** 修改 */ Boolean update(WalletAccountPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

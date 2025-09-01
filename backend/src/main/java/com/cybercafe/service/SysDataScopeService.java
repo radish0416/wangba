@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.SysDataScopeQueryDTO;
 
 /** 数据范围定义 服务。 */
 public interface SysDataScopeService {
-    IPage<SysDataScopePO> listPage(SysDataScopeQueryDTO dto);
-    java.util.List<SysDataScopePO> listAll(SysDataScopeQueryDTO dto);
-    SysDataScopePO detail(Long id);
+    /** 分页查询 */ IPage<SysDataScopePO> listPage(SysDataScopeQueryDTO dto);
+    /** 全量查询 */ java.util.List<SysDataScopePO> listAll(SysDataScopeQueryDTO dto);
+    /** 详情 */ SysDataScopePO detail(Long id);
+    /** 新增 */ Boolean create(SysDataScopePO po);
+    /** 修改 */ Boolean update(SysDataScopePO po);
+    /** 删除 */ Boolean delete(Long id);
 }

@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.DeviceActionLogQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 设备动作日志 服务实现。 */
 @Service
 public class DeviceActionLogServiceImpl implements DeviceActionLogService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(DeviceActionLogServiceImpl.class);
+    @Resource
     private DeviceActionLogMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class DeviceActionLogServiceImpl implements DeviceActionLogService {
     @Override
     public DeviceActionLogPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(DeviceActionLogPO po) {
+        log.info("create device_action_log id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(DeviceActionLogPO po) {
+        log.info("update device_action_log id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete device_action_log id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

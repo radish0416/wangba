@@ -5,7 +5,7 @@
 package com.cybercafe.domain.po;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.time.LocalDateTime;
+import com.cybercafe.domain.BaseAuditPO;
 import lombok.Data;
 
 /**
@@ -13,13 +13,10 @@ import lombok.Data;
  */
 @Data
 @TableName("seat")
-public class SeatPO {
+public class SeatPO extends BaseAuditPO {
     @TableId
     /** 主键ID */
     private Long id;
-
-    /** 门店/租户ID */
-    private Long storeId;
 
     /** 区域ID */
     private Long areaId;
@@ -29,32 +26,5 @@ public class SeatPO {
 
     /** 状态 1空闲 2占用 3故障 */
     private Integer status;
-
-    /** 创建人ID */
-    private Long createBy;
-
-    /** 创建时间 */
-    private LocalDateTime createTime;
-
-    /** 修改人ID */
-    private Long updateBy;
-
-    /** 修改时间 */
-    private LocalDateTime updateTime;
-
-    /** 扩展字段1 */
-    private String ext1;
-
-    /** 扩展字段2 */
-    private String ext2;
-
-    /** 扩展字段3 */
-    private String ext3;
-
-    /** 扩展字段4 */
-    private String ext4;
-
-    /** 扩展字段5 */
-    private String ext5;
 
 }

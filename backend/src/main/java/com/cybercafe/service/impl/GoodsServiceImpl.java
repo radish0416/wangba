@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.GoodsQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 商品 服务实现。 */
 @Service
 public class GoodsServiceImpl implements GoodsService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(GoodsServiceImpl.class);
+    @Resource
     private GoodsMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public GoodsPO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(GoodsPO po) {
+        log.info("create goods id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(GoodsPO po) {
+        log.info("update goods id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete goods id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.GoodsCategoryQueryDTO;
 
 /** 商品类目 服务。 */
 public interface GoodsCategoryService {
-    IPage<GoodsCategoryPO> listPage(GoodsCategoryQueryDTO dto);
-    java.util.List<GoodsCategoryPO> listAll(GoodsCategoryQueryDTO dto);
-    GoodsCategoryPO detail(Long id);
+    /** 分页查询 */ IPage<GoodsCategoryPO> listPage(GoodsCategoryQueryDTO dto);
+    /** 全量查询 */ java.util.List<GoodsCategoryPO> listAll(GoodsCategoryQueryDTO dto);
+    /** 详情 */ GoodsCategoryPO detail(Long id);
+    /** 新增 */ Boolean create(GoodsCategoryPO po);
+    /** 修改 */ Boolean update(GoodsCategoryPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

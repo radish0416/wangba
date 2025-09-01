@@ -12,14 +12,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 
 /** 库存SKU 控制器。 */
 @RestController
 @RequestMapping("/api/inventory_sku")
 @Tag(name = "库存SKU")
 public class InventorySkuController {
-    @Autowired
+    @Resource
     private InventorySkuService service;
 
 @PostMapping("/listPage")
@@ -38,5 +38,23 @@ public class InventorySkuController {
 @Operation(summary = "详情")
     public ApiResponse<InventorySkuPO> detail(@RequestBody java.util.Map<String, Long> req) {
         return ApiResponse.ok(service.detail(req.get("id")));
+    }
+
+@PostMapping("/create")
+@Operation(summary = "新增")
+    public ApiResponse<Boolean> create(@RequestBody @Validated InventorySkuPO po) {
+        return ApiResponse.ok(service.create(po));
+    }
+
+@PostMapping("/update")
+@Operation(summary = "修改")
+    public ApiResponse<Boolean> update(@RequestBody @Validated InventorySkuPO po) {
+        return ApiResponse.ok(service.update(po));
+    }
+
+@PostMapping("/delete")
+@Operation(summary = "删除")
+    public ApiResponse<Boolean> delete(@RequestBody java.util.Map<String, Long> req) {
+        return ApiResponse.ok(service.delete(req.get("id")));
     }
 }

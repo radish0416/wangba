@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.SysDataScopeQueryDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 数据范围定义 服务实现。 */
 @Service
 public class SysDataScopeServiceImpl implements SysDataScopeService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(SysDataScopeServiceImpl.class);
+    @Resource
     private SysDataScopeMapper mapper;
 
     @Override
@@ -32,5 +35,23 @@ public class SysDataScopeServiceImpl implements SysDataScopeService {
     @Override
     public SysDataScopePO detail(Long id) {
         return mapper.selectDetail(id);
+    }
+
+    @Override
+    public Boolean create(SysDataScopePO po) {
+        log.info("create sys_data_scope id={}", po.getId());
+        return mapper.insert(po) > 0;
+    }
+
+    @Override
+    public Boolean update(SysDataScopePO po) {
+        log.info("update sys_data_scope id={}", po.getId());
+        return mapper.updateById(po) > 0;
+    }
+
+    @Override
+    public Boolean delete(Long id) {
+        log.warn("delete sys_data_scope id={}", id);
+        return mapper.deleteById(id) > 0;
     }
 }

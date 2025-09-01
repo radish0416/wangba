@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.GoodsSkuQueryDTO;
 
 /** 商品SKU 服务。 */
 public interface GoodsSkuService {
-    IPage<GoodsSkuPO> listPage(GoodsSkuQueryDTO dto);
-    java.util.List<GoodsSkuPO> listAll(GoodsSkuQueryDTO dto);
-    GoodsSkuPO detail(Long id);
+    /** 分页查询 */ IPage<GoodsSkuPO> listPage(GoodsSkuQueryDTO dto);
+    /** 全量查询 */ java.util.List<GoodsSkuPO> listAll(GoodsSkuQueryDTO dto);
+    /** 详情 */ GoodsSkuPO detail(Long id);
+    /** 新增 */ Boolean create(GoodsSkuPO po);
+    /** 修改 */ Boolean update(GoodsSkuPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

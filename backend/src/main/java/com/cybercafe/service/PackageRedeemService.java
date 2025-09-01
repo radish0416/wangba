@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.PackageRedeemQueryDTO;
 
 /** 套餐核销记录 服务。 */
 public interface PackageRedeemService {
-    IPage<PackageRedeemPO> listPage(PackageRedeemQueryDTO dto);
-    java.util.List<PackageRedeemPO> listAll(PackageRedeemQueryDTO dto);
-    PackageRedeemPO detail(Long id);
+    /** 分页查询 */ IPage<PackageRedeemPO> listPage(PackageRedeemQueryDTO dto);
+    /** 全量查询 */ java.util.List<PackageRedeemPO> listAll(PackageRedeemQueryDTO dto);
+    /** 详情 */ PackageRedeemPO detail(Long id);
+    /** 新增 */ Boolean create(PackageRedeemPO po);
+    /** 修改 */ Boolean update(PackageRedeemPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

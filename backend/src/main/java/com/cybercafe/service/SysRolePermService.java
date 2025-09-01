@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.SysRolePermQueryDTO;
 
 /** 角色-权限 服务。 */
 public interface SysRolePermService {
-    IPage<SysRolePermPO> listPage(SysRolePermQueryDTO dto);
-    java.util.List<SysRolePermPO> listAll(SysRolePermQueryDTO dto);
-    SysRolePermPO detail(Long id);
+    /** 分页查询 */ IPage<SysRolePermPO> listPage(SysRolePermQueryDTO dto);
+    /** 全量查询 */ java.util.List<SysRolePermPO> listAll(SysRolePermQueryDTO dto);
+    /** 详情 */ SysRolePermPO detail(Long id);
+    /** 新增 */ Boolean create(SysRolePermPO po);
+    /** 修改 */ Boolean update(SysRolePermPO po);
+    /** 删除 */ Boolean delete(Long id);
 }

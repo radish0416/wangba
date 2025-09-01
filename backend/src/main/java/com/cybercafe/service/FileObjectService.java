@@ -10,7 +10,10 @@ import com.cybercafe.web.dto.FileObjectQueryDTO;
 
 /** 文件对象 服务。 */
 public interface FileObjectService {
-    IPage<FileObjectPO> listPage(FileObjectQueryDTO dto);
-    java.util.List<FileObjectPO> listAll(FileObjectQueryDTO dto);
-    FileObjectPO detail(Long id);
+    /** 分页查询 */ IPage<FileObjectPO> listPage(FileObjectQueryDTO dto);
+    /** 全量查询 */ java.util.List<FileObjectPO> listAll(FileObjectQueryDTO dto);
+    /** 详情 */ FileObjectPO detail(Long id);
+    /** 新增 */ Boolean create(FileObjectPO po);
+    /** 修改 */ Boolean update(FileObjectPO po);
+    /** 删除 */ Boolean delete(Long id);
 }
