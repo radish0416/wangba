@@ -1,14 +1,16 @@
--- 内容
+-- 内容（v3 重设计）
+
 CREATE TABLE `post` (
   `id` BIGINT NOT NULL,
+  `store_id` BIGINT NOT NULL DEFAULT 0,
   `title` VARCHAR(128) NOT NULL,
   `content` MEDIUMTEXT NOT NULL,
   `author_id` BIGINT NOT NULL,
   `status` TINYINT NOT NULL DEFAULT 1,
-  `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `idx_author` (`author_id`)
+  KEY `idx_store_status` (`store_id`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='帖子';
 
 CREATE TABLE `comment` (
@@ -16,7 +18,7 @@ CREATE TABLE `comment` (
   `post_id` BIGINT NOT NULL,
   `user_id` BIGINT NOT NULL,
   `content` VARCHAR(500) NOT NULL,
-  `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_post` (`post_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='评论';

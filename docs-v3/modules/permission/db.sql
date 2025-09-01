@@ -1,8 +1,9 @@
--- 权限扩展（数据范围）
+-- 权限扩展（v3 重设计）
+
 CREATE TABLE `sys_data_scope` (
   `id` BIGINT NOT NULL,
   `name` VARCHAR(64) NOT NULL,
-  `scope_rule` VARCHAR(32) NOT NULL COMMENT 'all|store|self',
+  `scope_rule` TINYINT NOT NULL COMMENT '1全部 2本门店 3本人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据范围定义';
 

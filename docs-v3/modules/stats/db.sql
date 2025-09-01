@@ -1,4 +1,5 @@
--- 数据统计（示例汇总表，可由ETL/任务生成）
+-- 数据统计（v3 重设计）
+
 CREATE TABLE `stats_daily_revenue` (
   `biz_date` DATE NOT NULL,
   `store_id` BIGINT NOT NULL DEFAULT 0,
