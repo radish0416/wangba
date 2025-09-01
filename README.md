@@ -5,6 +5,7 @@
 - 文档规范与目录结构：`docs/CONVENTIONS.md`
 - 实现方案 V1：`docs/plan/2025-09-01_wangba-project-implementation-plan-v1.md`
 - 实现方案 V2（按新约束）：`docs/plan/2025-09-01_wangba-project-implementation-plan-v2.md`
+- 新版文档 V3（更细化模块与规范）：`docs-v3/README-索引.md`
 - 沟通纪要（持续沉淀）：`docs/logs/`
   
 架构与设计：

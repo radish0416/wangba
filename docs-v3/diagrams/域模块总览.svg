@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540">
+  <rect x="0" y="0" width="960" height="540" fill="#ffffff" stroke="#ccc"/>
+  <text x="20" y="30" font-size="18">域模块总览（v3 占位图）</text>
+  <text x="20" y="60" font-size="14">用户/会员/积分/订单/商品-套餐/楼层-机位/钱包-余额-消费/库存耗材/活动/权限/基础服务/支付-设备对接/数据统计/内容</text>
+</svg>
