@@ -1,0 +1,13 @@
+-- 活动与优惠
+CREATE TABLE `campaign` (
+  `id` BIGINT NOT NULL,
+  `name` VARCHAR(64) NOT NULL,
+  `type` VARCHAR(32) NOT NULL COMMENT 'discount|fullcut|limited',
+  `status` TINYINT NOT NULL DEFAULT 0 COMMENT '0草稿 1生效 2下线',
+  `start_time` DATETIME NULL,
+  `end_time` DATETIME NULL,
+  `rules` JSON NULL COMMENT '规则JSON',
+  `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动';
