@@ -16,6 +16,11 @@ docs-v3
  │   └─ index.md
  ├─ miniapp-wireframes/
  │   └─ index.md
+ ├─ frontend/
+ │   ├─ README-索引.md
+ │   ├─ web-admin/设计-后台管理端.md
+ │   ├─ miniapp/设计-小程序端.md
+ │   └─ shared/设计系统与规范.md
  └─ modules/
      ├─ auth/
      ├─ permission/
@@ -40,6 +45,7 @@ docs-v3
 
 ## 快速入口
 - 后端规范：`后端编码与规范-MyBatisPlus-Swagger-MVC-第3版.md`
+- 前端设计：`frontend/README-索引.md`
 - 域模块总览：`diagrams/域模块总览.svg`
 - 模块文档：`modules/*`（每个模块包含 文档、流程图、数据库设计、原型链接）
 - 原型导航：`web-wireframes/index.md`、`miniapp-wireframes/index.md`
