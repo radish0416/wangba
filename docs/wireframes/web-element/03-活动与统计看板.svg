@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <style>
+      .panel{fill:#fff;stroke:#cbd5e1}
+      .title{font:700 18px Arial;fill:#0f172a}
+      .text{font:14px Arial;fill:#0f172a}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1600" height="1000" fill="#f6f8fa"/>
+  <rect x="40" y="40" width="760" height="440" class="panel"/>
+  <text x="60" y="80" class="title">活动配置</text>
+  <rect x="840" y="40" width="720" height="440" class="panel"/>
+  <text x="860" y="80" class="title">优惠券管理</text>
+  <rect x="40" y="520" width="1520" height="440" class="panel"/>
+  <text x="60" y="560" class="title">经营看板 (图表占位)</text>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <defs>
+    <style>
+      .phone{fill:#ffffff;stroke:#e5e7eb}
+      .title{font:700 28px Arial;fill:#0f172a}
+      .text{font:20px Arial;fill:#0f172a}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1080" height="1920" fill="#f3f4f6"/>
+  <rect x="40" y="40" width="1000" height="1840" class="phone" rx="40"/>
+  <text x="120" y="140" class="title">钱包</text>
+  <rect x="120" y="200" width="880" height="200" class="phone"/>
+  <text x="150" y="260" class="text">余额 · 最近交易</text>
+  <rect x="120" y="440" width="880" height="200" class="phone"/>
+  <text x="150" y="500" class="text">充值(调用支付)</text>
+  <rect x="120" y="680" width="880" height="200" class="phone"/>
+  <text x="150" y="740" class="text">退款/提现(对接)</text>
+  <rect x="120" y="920" width="880" height="200" class="phone"/>
+  <text x="150" y="980" class="text">支付结果页</text>
+</svg>

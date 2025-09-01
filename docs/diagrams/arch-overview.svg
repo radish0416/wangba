@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .box{fill:#fff;stroke:#0f172a;stroke-width:2}
+      .title{font:700 18px Arial;fill:#0f172a}
+      .text{font:14px Arial;fill:#0f172a}
+      .arrow{stroke:#0f172a;stroke-width:2;marker-end:url(#m)}
+    </style>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+
+  <rect x="50" y="50" width="420" height="200" class="box"/>
+  <text x="70" y="85" class="title">前端层</text>
+  <text x="70" y="120" class="text">微信小程序(3D/下单/钱包)</text>
+  <text x="70" y="150" class="text">Web后台(Element-UI 管理台)</text>
+
+  <rect x="520" y="50" width="830" height="780" class="box"/>
+  <text x="540" y="85" class="title">后端单体(Spring Boot)</text>
+  <text x="540" y="115" class="text">模块: auth / user / seat / order / billing / wallet / stats / storage / integration</text>
+
+  <rect x="560" y="140" width="360" height="160" class="box"/>
+  <text x="580" y="175" class="title">领域服务</text>
+  <text x="580" y="205" class="text">订单、计费、座位、活动优惠、钱包</text>
+
+  <rect x="960" y="140" width="360" height="160" class="box"/>
+  <text x="980" y="175" class="title">基础设施</text>
+  <text x="980" y="205" class="text">认证、RBAC、审计、日志、异常</text>
+
+  <rect x="560" y="340" width="760" height="180" class="box"/>
+  <text x="580" y="375" class="title">集成</text>
+  <text x="580" y="405" class="text">支付平台(预下单/回调)、设备监控(状态/事件)、微信API</text>
+
+  <rect x="560" y="560" width="220" height="180" class="box"/>
+  <text x="580" y="595" class="title">MySQL</text>
+  <text x="580" y="625" class="text">主数据/交易/配置</text>
+
+  <rect x="820" y="560" width="220" height="180" class="box"/>
+  <text x="840" y="595" class="title">Redis</text>
+  <text x="840" y="625" class="text">会话/热点/锁</text>
+
+  <rect x="1080" y="560" width="240" height="180" class="box"/>
+  <text x="1100" y="595" class="title">MinIO</text>
+  <text x="1100" y="625" class="text">3D模型/贴图/文件</text>
+
+  <line x1="470" y1="150" x2="520" y2="150" class="arrow"/>
+  <line x1="470" y1="180" x2="520" y2="180" class="arrow"/>
+  <line x1="640" y1="500" x2="670" y2="560" class="arrow"/>
+  <line x1="900" y1="500" x2="930" y2="560" class="arrow"/>
+  <line x1="1160" y1="500" x2="1200" y2="560" class="arrow"/>
+</svg>
