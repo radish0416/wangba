@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100">
+  <defs><style>.b{fill:#fff;stroke:#111}.t{font:14px Arial;fill:#111}.h{font:700 18px Arial;fill:#111}</style></defs>
+  <rect x="20" y="20" width="1560" height="1060" fill="#f6f8fa"/>
+  <text x="40" y="60" class="h">域模块总览（v2）</text>
+  <rect x="40" y="80" width="360" height="140" class="b"/><text x="60" y="110" class="h">用户/会员/积分</text><text x="60" y="140" class="t">user • member • points</text>
+  <rect x="440" y="80" width="360" height="140" class="b"/><text x="460" y="110" class="h">订单/计费/套餐</text><text x="460" y="140" class="t">order • billing • package</text>
+  <rect x="840" y="80" width="360" height="140" class="b"/><text x="860" y="110" class="h">机位/楼层/区域</text><text x="860" y="140" class="t">seat • floor • area</text>
+  <rect x="1240" y="80" width="340" height="140" class="b"/><text x="1260" y="110" class="h">商品/耗材库存</text><text x="1260" y="140" class="t">goods • inventory</text>
+
+  <rect x="40" y="260" width="360" height="140" class="b"/><text x="60" y="290" class="h">钱包/余额/消费记录</text><text x="60" y="320" class="t">wallet • balance • consume</text>
+  <rect x="440" y="260" width="360" height="140" class="b"/><text x="460" y="290" class="h">支付对接</text><text x="460" y="320" class="t">pay-bridge</text>
+  <rect x="840" y="260" width="360" height="140" class="b"/><text x="860" y="290" class="h">设备监控对接</text><text x="860" y="320" class="t">device-bridge</text>
+  <rect x="1240" y="260" width="340" height="140" class="b"/><text x="1260" y="290" class="h">活动/优惠券</text><text x="1260" y="320" class="t">campaign • coupon</text>
+
+  <rect x="40" y="440" width="360" height="140" class="b"/><text x="60" y="470" class="h">统计/对账</text><text x="60" y="500" class="t">stats • reconcile</text>
+  <rect x="440" y="440" width="360" height="140" class="b"/><text x="460" y="470" class="h">内容与互动</text><text x="460" y="500" class="t">content</text>
+  <rect x="840" y="440" width="360" height="140" class="b"/><text x="860" y="470" class="h">基础服务</text><text x="860" y="500" class="t">file • dict • notify</text>
+  <rect x="1240" y="440" width="340" height="140" class="b"/><text x="1260" y="470" class="h">权限（扩展）</text><text x="1260" y="500" class="t">auth • role • datarule</text>
+</svg>
