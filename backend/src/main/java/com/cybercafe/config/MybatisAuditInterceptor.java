@@ -23,9 +23,11 @@ public class MybatisAuditInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         if ("update".equals(invocation.getMethod().getName())) {
             Object parameter = invocation.getArgs()[1];
-            if (parameter instanceof Map<?, ?> map) {
+            if (parameter instanceof Map) {
+                Map<?, ?> map = (Map<?, ?>) parameter;
                 Object entity = map.get("et");
-                touchAudit(entity, map.get("param1"));
+                Object param1 = map.get("param1");
+                touchAudit(entity, param1);
             } else {
                 touchAudit(parameter, null);
             }
@@ -34,17 +36,31 @@ public class MybatisAuditInterceptor implements Interceptor {
     }
 
     private void touchAudit(Object entity, Object extra) {
-        if (entity == null) return;
+        if (entity == null) {
+            return;
+        }
         try {
             LocalDateTime now = LocalDateTime.now();
             Long userId = 0L; // TODO: 从登录上下文注入
-            var clazz = entity.getClass();
+            Class<?> clazz = entity.getClass();
             // createTime/createBy
-            try { clazz.getMethod("getCreateTime"); clazz.getMethod("setCreateTime", LocalDateTime.class).invoke(entity, now);} catch (Exception ignored) {}
-            try { clazz.getMethod("getCreateBy"); clazz.getMethod("setCreateBy", Long.class).invoke(entity, userId);} catch (Exception ignored) {}
+            try {
+                clazz.getMethod("getCreateTime");
+                clazz.getMethod("setCreateTime", LocalDateTime.class).invoke(entity, now);
+            } catch (Exception ignored) {}
+            try {
+                clazz.getMethod("getCreateBy");
+                clazz.getMethod("setCreateBy", Long.class).invoke(entity, userId);
+            } catch (Exception ignored) {}
             // updateTime/updateBy
-            try { clazz.getMethod("getUpdateTime"); clazz.getMethod("setUpdateTime", LocalDateTime.class).invoke(entity, now);} catch (Exception ignored) {}
-            try { clazz.getMethod("getUpdateBy"); clazz.getMethod("setUpdateBy", Long.class).invoke(entity, userId);} catch (Exception ignored) {}
+            try {
+                clazz.getMethod("getUpdateTime");
+                clazz.getMethod("setUpdateTime", LocalDateTime.class).invoke(entity, now);
+            } catch (Exception ignored) {}
+            try {
+                clazz.getMethod("getUpdateBy");
+                clazz.getMethod("setUpdateBy", Long.class).invoke(entity, userId);
+            } catch (Exception ignored) {}
         } catch (Exception ignored) { }
     }
 

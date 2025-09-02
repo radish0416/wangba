@@ -2,9 +2,9 @@
  * 本文件由工具自动生成，请勿手工修改。
  * 生成器: tools/codegen/generate_from_sql.py
  */
-import java.time.LocalDateTime;
-import java.time.LocalDateTime;
 package com.cybercafe.web.dto;
+
+import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.cybercafe.web.BaseAuditDTO;
 
@@ -30,3 +30,4 @@ public class SysPermQueryDTO extends BaseAuditDTO {
     /** 每页大小 */
     public Long size;
 }
+

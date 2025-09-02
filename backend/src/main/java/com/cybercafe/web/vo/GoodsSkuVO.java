@@ -2,10 +2,10 @@
  * 本文件由工具自动生成，请勿手工修改。
  * 生成器: tools/codegen/generate_from_sql.py
  */
-import java.time.LocalDateTime;
+package com.cybercafe.web.vo;
+
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
-package com.cybercafe.web.vo;
 import com.cybercafe.web.BaseAuditVO;
 
 /**
@@ -28,3 +28,4 @@ public class GoodsSkuVO extends BaseAuditVO {
     public Integer status;
 
 }
+

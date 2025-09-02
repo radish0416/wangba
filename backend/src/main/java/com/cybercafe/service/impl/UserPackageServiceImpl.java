@@ -3,6 +3,7 @@
  * 生成器: tools/codegen/generate_from_sql.py
  */
 package com.cybercafe.service.impl;
+
 import com.cybercafe.service.UserPackageService;
 import com.cybercafe.repository.mapper.UserPackageMapper;
 import com.cybercafe.domain.po.UserPackagePO;
@@ -10,9 +11,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cybercafe.web.dto.UserPackageQueryDTO;
 import org.springframework.stereotype.Service;
-import jakarta.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
 
 /** 用户持有套餐 服务实现。 */
 @Service
@@ -55,3 +58,4 @@ public class UserPackageServiceImpl implements UserPackageService {
         return mapper.deleteById(id) > 0;
     }
 }
+

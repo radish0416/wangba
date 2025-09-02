@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
  */
 @Data
 public class BaseAuditPO {
+
+    private Long id;
     /** 门店/租户ID */
     private Long storeId;
     /** 创建人ID */

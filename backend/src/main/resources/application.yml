@@ -1,14 +1,34 @@
 server:
-  port: 8080
+  port: 8090
 spring:
   application:
     name: cybercafe-backend
   datasource:
-    url: jdbc:mysql://localhost:3306/cybercafe?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/cybercafe?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
-    password: root
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+
+# Swagger配置
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+  packages-to-scan: com.cybercafe.web.controller
+
+# 启用详细日志
+logging:
+  level:
+    org.springdoc: DEBUG
+    io.swagger: DEBUG
+
